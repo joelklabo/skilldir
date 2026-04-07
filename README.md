@@ -258,8 +258,6 @@ skilldir status --help
 
 Changesets manages versioning for this repo. npm publishing is intentionally deferred right now, so release automation is limited to versioning and release PR flow.
 
-The current GitHub Actions blocker is repository policy: Actions can push the `changeset-release/main` branch, but the repo is not yet configured to let Actions open the version PR.
-
 Current release policy for `0.x`:
 
 - release PRs should be reviewed manually

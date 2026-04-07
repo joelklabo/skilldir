@@ -25,7 +25,7 @@ pnpm version-packages
 pnpm build
 ```
 
-The GitHub release workflow currently creates and updates the release branch, but the repository still needs GitHub Actions permission to open the version PR.
+The GitHub release workflow is now configured to open the version PR from `changeset-release/main` automatically.
 
 ### Release Checklist
 
@@ -35,6 +35,7 @@ The GitHub release workflow currently creates and updates the release branch, bu
 - Confirm the Pages site still matches the current CLI/docs behavior.
 - Push only the intended release-prep changes.
 - Verify whether the repository settings now allow GitHub Actions to open the version PR.
+  This is currently configured correctly.
 
 ## Test Fixtures
 

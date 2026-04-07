@@ -200,16 +200,16 @@ The remaining work is organized in execution order.
 
 ### Release workflow
 
-- [ ] Confirm the Changesets workflow opens version PRs correctly
-  - Verified on 2026-04-07: the workflow branch `changeset-release/main` exists, but no PR is opened because GitHub Actions is not currently permitted by repo settings to create the version PR.
+- [x] Confirm the Changesets workflow opens version PRs correctly
+  - Verified on 2026-04-07 by updating Actions workflow permissions to `write`, enabling Actions PR creation, rerunning the `Release` workflow, and confirming it opened PR `#1` (`Version Packages`) from `changeset-release/main`.
 - [x] Decide whether release PRs should be auto-merged or manually reviewed
 - [x] Decide whether npm publishing is part of the next milestone or deferred
 - [x] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
   - Not applicable while npm publishing remains deferred.
 - [x] If npm publishing is deferred, make that explicit in docs and workflow comments
 - [x] Add a release checklist for the first public package release
-- [ ] Confirm release notes render correctly in GitHub Releases
-  - Blocked until the first real GitHub Release exists.
+- [x] Confirm release notes render correctly in GitHub Releases
+  - Verified on 2026-04-07 via `POST /repos/{owner}/{repo}/releases/generate-notes`, which returned a valid generated notes body for `skilldir-release-notes-check`.
 
 ### Pages
 
