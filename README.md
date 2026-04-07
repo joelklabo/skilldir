@@ -16,16 +16,14 @@ This is meant to make tools like Codex, OpenCode, and Claude Code consume one st
 
 Different agent tools look for skills in different places. `skilldir` lets you define a single generated directory that represents the precedence union of several source trees.
 
-## Status
-
-This repo is being built in public with a TDD-first approach. The first milestone focuses on local filesystem sources only.
-
-## Planned Commands
+## Commands
 
 - `skilldir sync`
 - `skilldir watch`
 - `skilldir status`
 - `skilldir doctor`
+
+Both `status` and `doctor` support `--json`.
 
 ## Config
 
@@ -42,12 +40,66 @@ The MVP config format is JSON for simplicity.
 }
 ```
 
+## Compatibility Examples
+
+Project-local skills winning over global shared skills:
+
+```json
+{
+  "sources": [
+    "/home/honk/code/project/.agents/skills",
+    "/home/honk/.codex/skills",
+    "/home/honk/.claude/skills"
+  ],
+  "output": "/home/honk/.agents/skills"
+}
+```
+
+Using `skilldir` to materialize a Claude-compatible skills directory:
+
+```json
+{
+  "sources": [
+    "/home/honk/code/project/.agents/skills",
+    "/home/honk/.agents/skills"
+  ],
+  "output": "/home/honk/.claude/skills"
+}
+```
+
+## Output Examples
+
+Human-readable `status`:
+
+```text
+playwright -> /home/honk/code/project/.agents/skills/playwright
+  shadowed:
+  - /home/honk/.codex/skills/playwright
+```
+
+Machine-readable `status --json`:
+
+```json
+{
+  "resolved": [
+    {
+      "name": "playwright",
+      "winner": "/home/honk/code/project/.agents/skills/playwright",
+      "shadowed": ["/home/honk/.codex/skills/playwright"]
+    }
+  ],
+  "warnings": [],
+  "created": [],
+  "updated": [],
+  "removed": []
+}
+```
+
 ## Local Development
 
 ```bash
 pnpm install
-pnpm test
-pnpm build
+pnpm check
 ```
 
 ## Docs

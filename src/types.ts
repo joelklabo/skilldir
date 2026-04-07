@@ -21,6 +21,12 @@ export type ManagedManifest = {
   managed: Record<string, string>;
 };
 
+export type LockInfo = {
+  path: string;
+  reason: 'already-locked';
+  pid?: number;
+};
+
 export type SyncWarning =
   | {
       code: 'conflicting-unmanaged-entry';

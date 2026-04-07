@@ -59,7 +59,11 @@ export async function runDoctor(
       });
     }
   }
-  return issues;
+  return issues.sort((left, right) => {
+    const leftKey = JSON.stringify(left);
+    const rightKey = JSON.stringify(right);
+    return leftKey.localeCompare(rightKey, 'en');
+  });
 }
 
 export function renderDoctor(issues: DoctorIssue[]): string {
@@ -78,4 +82,15 @@ export function renderDoctor(issues: DoctorIssue[]): string {
       }
     })
     .join('\n');
+}
+
+export function renderDoctorJson(issues: DoctorIssue[]): string {
+  return JSON.stringify(
+    {
+      issues,
+      count: issues.length,
+    },
+    null,
+    2,
+  );
 }

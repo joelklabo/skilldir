@@ -4,9 +4,14 @@ on:
   push:
     branches: ['main']
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
       pull-requests: write
@@ -20,6 +25,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # npm publishing is intentionally deferred. Changesets still manages
+      # versioning/release PR flow, and the publish step is a no-op build.
       - uses: changesets/action@v1
         with:
           version: pnpm changeset version

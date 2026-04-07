@@ -36,11 +36,16 @@ describe('status output', () => {
   it('renders JSON output', () => {
     const parsed = JSON.parse(renderStatusJson(makeResult())) as {
       resolved: Array<{ name: string; winner: string; shadowed: string[] }>;
+      warnings: Array<unknown>;
+      created: string[];
+      updated: string[];
+      removed: string[];
     };
     expect(parsed.resolved[0]).toEqual({
       name: 'playwright',
       winner: '/a/playwright',
       shadowed: ['/b/playwright'],
     });
+    expect(parsed.created).toEqual([]);
   });
 });

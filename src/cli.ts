@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { loadConfig } from './config.js';
-import { renderDoctor, runDoctor } from './doctor.js';
+import { renderDoctor, renderDoctorJson, runDoctor } from './doctor.js';
 import { renderStatus, renderStatusJson } from './status.js';
 import { runSync } from './sync.js';
 import { startWatch } from './watch.js';
@@ -14,7 +14,8 @@ const program = new Command();
 
 program
   .name('skilldir')
-  .description('Materialize a first-source-wins union of skill directories.');
+  .description('Materialize a first-source-wins union of skill directories.')
+  .version('0.1.0');
 
 program
   .command('sync')
@@ -40,11 +41,17 @@ program
 program
   .command('doctor')
   .requiredOption('--config <path>', 'Path to JSON config file')
-  .action(async (options: CommonOptions) => {
+  .option('--json', 'Render JSON output')
+  .action(async (options: CommonOptions & { json?: boolean }) => {
     const config = await loadConfig(options.config);
     const result = await runSync(config);
     const issues = await runDoctor(config, result);
-    process.stdout.write(`${renderDoctor(issues)}\n`);
+    process.stdout.write(
+      `${options.json ? renderDoctorJson(issues) : renderDoctor(issues)}\n`,
+    );
+    if (issues.length > 0) {
+      process.exitCode = 1;
+    }
   });
 
 program
@@ -66,4 +73,11 @@ program
     process.on('SIGTERM', () => void shutdown());
   });
 
-void program.parseAsync(process.argv);
+try {
+  await program.parseAsync(process.argv);
+} catch (error) {
+  process.stderr.write(
+    `${error instanceof Error ? error.message : String(error)}\n`,
+  );
+  process.exitCode = 1;
+}
