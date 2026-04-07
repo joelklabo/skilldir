@@ -26,10 +26,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # npm publishing is intentionally deferred. Changesets still manages
-      # versioning/release PR flow, and the publish step is a no-op build.
+      # versioning/release PR flow, and the publish step is an explicit no-op.
       - uses: changesets/action@v1
         with:
           version: pnpm changeset version
-          publish: pnpm build
+          publish: 'echo "npm publish is not configured yet"'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

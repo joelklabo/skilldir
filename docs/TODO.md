@@ -28,7 +28,7 @@ The remaining work is organized in execution order.
 - [x] Add unit and integration coverage for current MVP behavior
 - [x] Verify local `pnpm check` passes
 - [ ] Confirm GitHub Pages is enabled and the deployed site matches `site/index.html`
-- [ ] Confirm the release workflow has the required repository permissions and tokens
+- [x] Confirm the release workflow has the required repository permissions and tokens
 
 ## Phase 1. Define the `0.x` Product Contract
 
@@ -83,7 +83,7 @@ The remaining work is organized in execution order.
 
 ### Reconciliation
 
-- [ ] Add an explicit lock for concurrent `sync` runs
+- [x] Add an explicit lock for concurrent `sync` runs
 - [ ] Decide whether the lock lives in the output directory or app-state directory
 - [ ] Add tests for two concurrent sync processes
 - [ ] Add tests for stale manifest entries
@@ -101,7 +101,7 @@ The remaining work is organized in execution order.
 ### Status output
 
 - [ ] Add a compact summary line with counts
-- [ ] Add `status --json`
+- [x] Add `status --json`
 - [ ] Define a stable JSON schema for `status --json`
 - [ ] Add snapshot tests for human-readable status output
 - [ ] Add snapshot tests for JSON status output
@@ -111,7 +111,7 @@ The remaining work is organized in execution order.
 
 ### Doctor output
 
-- [ ] Add `doctor --json`
+- [x] Add `doctor --json`
 - [ ] Define a stable JSON schema for `doctor --json`
 - [ ] Add snapshot tests for human-readable doctor output
 - [ ] Add snapshot tests for JSON doctor output
@@ -125,7 +125,7 @@ The remaining work is organized in execution order.
 
 - [ ] Add top-level `--help` examples
 - [ ] Add per-command examples
-- [ ] Add a top-level `--version`
+- [x] Add a top-level `--version`
 - [ ] Add `--quiet`
 - [ ] Add `--verbose`
 - [ ] Decide whether `sync` should print full status or just a compact summary by default
@@ -147,11 +147,11 @@ The remaining work is organized in execution order.
 ## Phase 5. CLI Integration and End-to-End Tests
 
 - [ ] Add CLI smoke tests that invoke the built binary
-- [ ] Add CLI tests for `sync --config`
-- [ ] Add CLI tests for `status`
-- [ ] Add CLI tests for `status --json`
-- [ ] Add CLI tests for `doctor`
-- [ ] Add CLI tests for error cases like missing config and invalid config
+- [x] Add CLI tests for `sync --config`
+- [x] Add CLI tests for `status`
+- [x] Add CLI tests for `status --json`
+- [x] Add CLI tests for `doctor`
+- [x] Add CLI tests for error cases like missing config and invalid config
 - [ ] Add integration tests for nested source/output combinations
 - [ ] Add integration tests for broken symlinks in the output tree
 - [ ] Add integration tests for unmanaged output conflicts
@@ -166,7 +166,7 @@ The remaining work is organized in execution order.
 - [ ] Add installation instructions for local development
 - [ ] Add installation instructions for global CLI usage
 - [ ] Add a short “why not wrappers / why not FUSE” rationale
-- [ ] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
+- [x] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
 - [ ] Add sample `status` and `doctor` output
 - [ ] Add troubleshooting section for unmanaged output entries
 - [ ] Add troubleshooting section for permissions and broken symlinks
