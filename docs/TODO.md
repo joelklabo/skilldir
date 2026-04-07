@@ -1,344 +1,369 @@
 # skilldir Todo
 
-This backlog is intentionally super granular. It is organized to be executable in sequence, to support TDD, and to make hidden work visible before it turns into scope drift.
+This document is intentionally detailed. It is meant to be used as the working backlog, not as a marketing roadmap.
 
-Status labels:
+Current repo state at a high level:
 
-- `[x]` already done
-- `[ ]` not started
-- `decision:` explicit decision needed before coding
-- `verify:` explicit validation step after implementation
+- `skilldir` exists as a TypeScript CLI with `sync`, `status`, `doctor`, and `watch`
+- resolution is first-source-wins
+- skill identity is the directory basename containing `SKILL.md`
+- output is a managed symlink directory with a manifest of managed entries
+- tests, CI, release scaffolding, and a landing page already exist
 
-## 0. Snapshot
+The remaining work is organized in execution order.
 
-- [x] Repository exists and is published.
-- [x] Core MVP commands exist: `sync`, `status`, `doctor`, `watch`.
-- [x] First-source-wins resolution exists.
-- [x] Symlink materialization exists.
-- [x] Managed manifest exists.
-- [x] Initial CI, release, and Pages scaffolding exists.
-- [x] Initial unit and integration coverage exists.
+## Phase 0. Confirm Current Baseline
 
-## 1. Product decisions to lock before more code
+- [x] Create the repository
+- [x] Publish the initial repo to GitHub
+- [x] Add CI workflow
+- [x] Add release/versioning scaffold with Changesets
+- [x] Add a Pages landing page scaffold
+- [x] Add the first public README
+- [x] Add issue templates, PR template, contributing guide, and code of conduct
+- [x] Implement `sync`
+- [x] Implement `status`
+- [x] Implement `doctor`
+- [x] Implement `watch`
+- [x] Add unit and integration coverage for current MVP behavior
+- [x] Verify local `pnpm check` passes
+- [ ] Confirm GitHub Pages is enabled and the deployed site matches `site/index.html`
+- [ ] Confirm the release workflow has the required repository permissions and tokens
 
-- [ ] Confirm the public promise for `0.x`.
-- [ ] Decide whether the public contract is “JSON config only” or “JSON now, YAML next”.
-- [ ] Decide whether `~/.agents/skills` is recommended in docs or if `output` stays fully user-defined.
-- [ ] Decide whether source labels are a `0.x` feature or deferred.
-- [ ] Decide whether duplicate skill names inside one source are warnings or hard errors.
-- [ ] Decide whether hidden directories other than `.git` should be ignored by default.
-- [ ] Decide whether unmanaged blocking entries in `output` should make `sync` return a non-zero exit code.
-- [ ] Decide whether `doctor` becomes the only command that exits non-zero for health issues or whether `sync` should also fail on certain classes of problems.
-- [ ] Decide whether manifest location stays in `output` or eventually moves to app state.
-- [ ] Decide whether Windows symlink support is in-scope for `0.x`.
-- [ ] Decide whether npm publishing is part of the first public release or explicitly deferred.
+## Phase 1. Define the `0.x` Product Contract
 
-## 2. Backlog sequencing
+- [ ] Decide whether JSON remains the only config format for the full `0.x` line
+- [ ] Decide whether `skilldir` will treat source labels as cosmetic metadata or part of the public config contract
+- [ ] Decide whether the canonical example output path in docs should be `~/.agents/skills`
+- [ ] Decide whether `status --json` and `doctor --json` are now stable API surfaces
+- [ ] Decide whether the manifest file is part of the supported public implementation contract or intentionally private
+- [ ] Decide how much Windows support is explicitly promised in `0.x`
+- [ ] Decide whether duplicate skill names within a single source are warnings or hard errors
+- [ ] Decide whether hidden directories other than `.git` are scanned by default or ignored by default
+- [ ] Write these decisions down in the README and architecture docs
 
-### Phase A: CLI/core hardening
+## Phase 2. Core CLI Hardening
 
-- [ ] Harden config parsing and path normalization.
-- [ ] Harden status/doctor output contracts.
-- [ ] Harden reconcile safety around unmanaged entries and concurrent syncs.
-- [ ] Add CLI integration tests.
+### Config loading
 
-### Phase B: operational readiness
+- [ ] Add a config version field or explicitly document versionless config
+- [ ] Support `--config` consistently on every command
+- [ ] Add better config-file-not-found errors
+- [ ] Add better config-parse errors with filename and line/column when possible
+- [ ] Expand `~` in configured paths
+- [ ] Normalize all configured paths to absolute paths
+- [ ] Resolve relative paths from the config file directory, not the shell cwd
+- [ ] Add explicit tests for path normalization
+- [ ] Decide whether env var interpolation is supported
+- [ ] If env var interpolation is supported, define exact syntax and escaping behavior
+- [ ] Add config fixtures covering valid and invalid cases
 
-- [ ] Finish release/versioning path.
-- [ ] Finish docs, landing page, and install instructions.
-- [ ] Tighten CI for PR confidence.
+### Discovery
 
-### Phase C: forward architecture
+- [ ] Add explicit tests for symlinked source roots
+- [ ] Add explicit tests for symlinked skill directories inside a source
+- [ ] Add explicit tests for unreadable directories
+- [ ] Add explicit tests for nested output directories beneath a source
+- [ ] Add explicit tests for very deep directory trees
+- [ ] Add explicit tests for skills with spaces and punctuation in folder names
+- [ ] Add explicit tests for case-sensitive and case-insensitive collisions where possible
+- [ ] Decide whether recursive scanning should be depth-limited
+- [ ] Decide whether directories beginning with `.` should be skipped by default
+- [ ] Add source-scan timing instrumentation if large trees become a problem
 
-- [ ] Design labeled sources.
-- [ ] Design alternate config formats.
-- [ ] Design remote-materialized source support.
-- [ ] Design service-install examples for background watch.
+### Resolution
 
-## 3. Config and input hardening
+- [ ] Preserve deterministic ordering for winners
+- [ ] Preserve deterministic ordering for shadowed candidates
+- [ ] Add tests for three or more colliding sources for one skill
+- [ ] Add tests for multiple unique skills across many sources
+- [ ] Add a human-readable explanation of the precedence rule to `status`
+- [ ] Decide whether `status` should optionally show source index numbers
+- [ ] Decide whether `status` should optionally show source labels
 
-- [x] Define MVP config shape with `sources` and `output`.
-- [x] Resolve config-relative paths.
-- [ ] Add explicit config schema documentation in README.
-- [ ] Add `docs/config.md` or equivalent config section with examples.
-- [ ] Add config fixture for minimal valid config.
-- [ ] Add config fixture for config with relative paths.
-- [ ] Add config fixture for config with duplicate source paths.
-- [ ] Add config fixture for config with missing `sources`.
-- [ ] Add config fixture for config with empty `sources`.
-- [ ] Add config fixture for config with missing `output`.
-- [ ] Add config fixture for config with non-string `sources` entries.
-- [ ] Add unit test for invalid JSON parse failures.
-- [ ] Add unit test for missing config file path.
-- [ ] Add unit test for config-relative path resolution.
-- [ ] Add unit test for duplicate sources and define desired behavior.
-- [ ] Add unit test for `~` expansion if/when supported.
-- [ ] Add explicit CLI error text for config parse failures.
-- [ ] Add explicit CLI error text for missing config file.
-- [ ] Add exit code contract for config failures.
-- [ ] `decision:` keep JSON only in `0.1.x` or add YAML/TOML.
-- [ ] If YAML is added later:
-- [ ] Add parser dependency selection criteria.
-- [ ] Add format precedence rules.
-- [ ] Add tests for format parity.
+### Reconciliation
 
-## 4. Discovery hardening
+- [ ] Add an explicit lock for concurrent `sync` runs
+- [ ] Decide whether the lock lives in the output directory or app-state directory
+- [ ] Add tests for two concurrent sync processes
+- [ ] Add tests for stale manifest entries
+- [ ] Add tests for broken managed symlinks before sync
+- [ ] Add tests for unmanaged files blocking desired skill names
+- [ ] Add tests for unmanaged directories blocking desired skill names
+- [ ] Add tests for unmanaged symlinks blocking desired skill names
+- [ ] Add tests for managed symlink retargeting after precedence changes
+- [ ] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
+- [ ] Decide whether manifest writes should be atomic temp-write + rename
+- [ ] Add cleanup behavior for temp files left behind after interrupted syncs
 
-- [x] Recursively walk sources.
-- [x] Detect skills by `SKILL.md`.
-- [x] Ignore `.git`.
-- [x] Ignore `node_modules`.
-- [x] Ignore nested `output` directory.
-- [ ] Add explicit unit test for symlinked source roots.
-- [ ] Add explicit unit test for source path that exists but is a file, not a directory.
-- [ ] Add explicit unit test for unreadable directory behavior.
-- [ ] Add explicit unit test for nested directories that contain multiple skill trees.
-- [ ] Add explicit unit test for hidden directories other than `.git`.
-- [ ] Add explicit unit test for source ordering when filesystem traversal order differs.
-- [ ] Add explicit unit test for paths with spaces.
-- [ ] Add explicit unit test for mixed-case skill names.
-- [ ] Add explicit unit test for nested output directory below a source root.
-- [ ] Add explicit integration test for large but shallow tree.
-- [ ] Add explicit integration test for deep tree.
-- [ ] `decision:` should discovery follow symlinked directories below a source tree.
-- [ ] `decision:` should case sensitivity match platform semantics or remain byte-for-byte.
+## Phase 3. Diagnostics and UX
 
-## 5. Resolution hardening
+### Status output
 
-- [x] Preserve first-source-wins.
-- [x] Preserve shadowed candidates for diagnostics.
-- [x] Keep output deterministic.
-- [ ] Add unit test for three-way shadowing across three sources.
-- [ ] Add unit test for duplicate names within the same source.
-- [ ] Add unit test for deterministic ordering when candidates share the same source index.
-- [ ] Add explicit resolver output shape docs.
-- [ ] Add notes in README describing that folder basename is the skill key.
-- [ ] `decision:` if two candidates exist in one source, should lexicographic order win, first traversal win, or should that be treated as invalid source state.
+- [ ] Add a compact summary line with counts
+- [ ] Add `status --json`
+- [ ] Define a stable JSON schema for `status --json`
+- [ ] Add snapshot tests for human-readable status output
+- [ ] Add snapshot tests for JSON status output
+- [ ] Decide whether empty sources are shown in `status`
+- [ ] Decide whether shadowed candidates should be hidden behind a flag in compact mode
+- [ ] Decide whether ANSI color is worth adding in `0.x`
 
-## 6. Reconcile and filesystem safety
+### Doctor output
 
-- [x] Create output directory if missing.
-- [x] Create missing symlinks.
-- [x] Update wrong managed symlinks.
-- [x] Remove stale managed symlinks.
-- [x] Preserve unmanaged files and directories.
-- [x] Preserve unmanaged symlinks.
-- [x] Track managed entries in manifest.
-- [ ] Add unit test for stale managed symlink removal when target was deleted.
-- [ ] Add unit test for unmanaged file blocking a desired skill.
-- [ ] Add unit test for unmanaged directory blocking a desired skill.
-- [ ] Add unit test for unmanaged symlink blocking a desired skill.
-- [ ] Add unit test for managed symlink already correct.
-- [ ] Add unit test for manifest cleanup after skill removal.
-- [ ] Add unit test for output directory containing unrelated dotfiles.
-- [ ] Add unit test for manifest corruption fallback behavior.
-- [ ] Add explicit reconciliation summary type docs.
-- [ ] Add file-lock or pid-lock design note.
-- [ ] Implement coarse lock for concurrent `sync` runs.
-- [ ] Add tests for concurrent `sync` behavior once lock exists.
-- [ ] Review atomic rename strategy for portability.
-- [ ] `decision:` should manifest write happen before or after symlink reconcile if a partial failure occurs.
-- [ ] `verify:` manually test reconcile against a real temp tree with preexisting unmanaged entries.
+- [ ] Add `doctor --json`
+- [ ] Define a stable JSON schema for `doctor --json`
+- [ ] Add snapshot tests for human-readable doctor output
+- [ ] Add snapshot tests for JSON doctor output
+- [ ] Add explicit checks for output directory permission failures
+- [ ] Add explicit checks for source directory permission failures
+- [ ] Add explicit checks for manifest corruption
+- [ ] Decide which doctor issues should produce non-zero exit codes
+- [ ] Add an explicit machine-readable code list to the docs
 
-## 7. Manifest lifecycle
+### CLI ergonomics
 
-- [x] Introduce manifest file.
-- [ ] Add docs for what the manifest is and why it exists.
-- [ ] Add explicit schema comments or JSON schema note.
-- [ ] Add test for reading empty/missing manifest.
-- [ ] Add test for invalid manifest JSON.
-- [ ] Add test for manifest with unknown extra keys.
-- [ ] Add migration strategy note in case manifest schema changes later.
-- [ ] `decision:` keep manifest in `output` or move to per-user state directory later.
+- [ ] Add top-level `--help` examples
+- [ ] Add per-command examples
+- [ ] Add a top-level `--version`
+- [ ] Add `--quiet`
+- [ ] Add `--verbose`
+- [ ] Decide whether `sync` should print full status or just a compact summary by default
+- [ ] Decide whether `doctor` should be quiet on success or print `doctor: ok`
 
-## 8. CLI UX and command behavior
+## Phase 4. Watch Mode Hardening
 
-- [x] Basic commands exist.
-- [ ] Add top-level help examples in README.
-- [ ] Add examples for each command in README.
-- [ ] Add `--json` for `doctor`.
-- [ ] Add `--verbose` for all commands or explicitly reject it until supported.
-- [ ] Add `--quiet` for machine-oriented use or explicitly defer it.
-- [ ] Add `--version` smoke test.
-- [ ] Add stable exit codes for:
-- [ ] config failure
-- [ ] doctor found issues
-- [ ] sync encountered blocking conflicts
-- [ ] unexpected internal error
-- [ ] Add CLI integration test for `status --json`.
-- [ ] Add CLI integration test for `doctor`.
-- [ ] Add CLI integration test for config parse failure.
-- [ ] Add CLI integration test for missing config file.
-- [ ] Add CLI integration test for successful `sync` creating links on disk.
-- [ ] Add CLI integration test for `watch` startup and clean shutdown.
-- [ ] `decision:` should `sync` print only the summary or the full resolved mapping.
+- [ ] Add tests for startup sync followed by change-driven sync
+- [ ] Add tests for repeated burst changes across multiple paths
+- [ ] Add tests for source directory deletion and recreation
+- [ ] Add tests for output directory deletion while watch mode is running
+- [ ] Add tests for signal handling and clean shutdown
+- [ ] Add tests for interval-driven periodic resync
+- [ ] Add overflow/backstop behavior if the watcher misses events
+- [ ] Add log messages that distinguish filesystem-triggered syncs from periodic syncs
+- [ ] Decide whether watch mode should continue when a source disappears temporarily
+- [ ] Decide whether watch mode should emit structured logs in a future `--json` mode
 
-## 9. Status output hardening
+## Phase 5. CLI Integration and End-to-End Tests
 
-- [x] Human output exists.
-- [x] JSON output exists.
-- [ ] Add stable snapshot test for text output with one skill.
-- [ ] Add stable snapshot test for text output with shadowed skills.
-- [ ] Add stable snapshot test for text output with warnings.
-- [ ] Add stable snapshot test for JSON output.
-- [ ] Add explicit ordering test to ensure output is deterministic.
-- [ ] Add compact summary line with total resolved, total shadowed, total warnings.
-- [ ] Add optional source labels if config grows them.
-- [ ] Add docs that status output is intended to answer “what skill is coming from where”.
-- [ ] `decision:` whether warnings belong in `status` or should be separated into `doctor`.
+- [ ] Add CLI smoke tests that invoke the built binary
+- [ ] Add CLI tests for `sync --config`
+- [ ] Add CLI tests for `status`
+- [ ] Add CLI tests for `status --json`
+- [ ] Add CLI tests for `doctor`
+- [ ] Add CLI tests for error cases like missing config and invalid config
+- [ ] Add integration tests for nested source/output combinations
+- [ ] Add integration tests for broken symlinks in the output tree
+- [ ] Add integration tests for unmanaged output conflicts
+- [ ] Add integration tests for precedence changes between sync runs
+- [ ] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
+- [ ] Decide whether to add large-tree performance tests in CI or keep them local-only
 
-## 10. Doctor hardening
+## Phase 6. Documentation Quality
 
-- [x] Missing source detection exists.
-- [x] Broken managed symlink detection exists.
-- [x] Unmanaged output entry detection exists.
-- [x] Shadowed skill reporting exists.
-- [ ] Add JSON output mode.
-- [ ] Add stable text snapshot tests.
-- [ ] Add stable JSON snapshot tests.
-- [ ] Add explicit issue code docs.
-- [ ] Add output-permission failure reporting.
-- [ ] Add manifest corruption reporting if relevant.
-- [ ] Add blocking unmanaged entry classification separate from generic unmanaged entry.
-- [ ] Add recommendation text for common issues.
-- [ ] `decision:` whether shadowed skills belong in `doctor` by default or should be info-only.
+### README
 
-## 11. Watch mode hardening
+- [ ] Add installation instructions for local development
+- [ ] Add installation instructions for global CLI usage
+- [ ] Add a short “why not wrappers / why not FUSE” rationale
+- [ ] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
+- [ ] Add sample `status` and `doctor` output
+- [ ] Add troubleshooting section for unmanaged output entries
+- [ ] Add troubleshooting section for permissions and broken symlinks
+- [ ] Add badges for CI and release status
 
-- [x] Filesystem watch exists.
-- [x] Debounce exists.
-- [x] Periodic full rescan exists.
-- [ ] Add tests for `add`, `addDir`, `change`, `unlink`, and `unlinkDir`.
-- [ ] Add test for repeated bursts being coalesced into one sync.
-- [ ] Add test for periodic sync still firing after filesystem events.
-- [ ] Add test for clean shutdown on SIGINT.
-- [ ] Add test for clean shutdown on SIGTERM.
-- [ ] Add test for sync rejection inside watch loop not crashing the watcher.
-- [ ] Add backoff/retry note for noisy or unavailable trees.
-- [ ] Document expected service model:
-- [ ] manual `skilldir watch`
-- [ ] launchd example
-- [ ] systemd user service example
-- [ ] `decision:` should watch skip missing sources silently until they appear, or log every cycle.
+### Architecture docs
 
-## 12. Testing expansion
+- [ ] Add a one-page architecture diagram to the site or docs
+- [ ] Add a short “invariants” section
+- [ ] Add a “why the manifest exists” section
+- [ ] Add a “why source order beats priorities in the MVP” section
+- [ ] Add a “what is intentionally deferred” section
 
-### Core unit coverage
+### Contributor docs
 
-- [x] discovery tests exist
-- [x] resolution tests exist
-- [x] reconcile tests exist
-- [x] status tests exist
-- [x] doctor tests exist
-- [x] watch debounce test exists
-- [ ] add config unit tests
-- [ ] add manifest unit tests
-- [ ] add CLI command tests
+- [ ] Document local release flow with Changesets
+- [ ] Document how to add a new test fixture
+- [ ] Document how to validate Pages locally
+- [ ] Document branch/commit hygiene expectations
 
-### Integration coverage
+## Phase 7. CI, Release, and Operations
 
-- [x] sync integration exists
-- [ ] add end-to-end CLI integration test suite using spawned process execution
-- [ ] add integration test for nested source roots
-- [ ] add integration test for output under one of the source roots
-- [ ] add integration test for empty source set rejection
-- [ ] add integration test for missing source warnings
-- [ ] add integration test for broken managed symlink recovery
-- [ ] add integration test for manual unmanaged output entry handling
+### CI
 
-### Fixture quality
+- [ ] Confirm the CI workflow runs on PRs and on `main`
+- [ ] Confirm CI uses `pnpm install --frozen-lockfile`
+- [ ] Decide whether CI should also run `format:check`
+- [ ] Decide whether coverage should be uploaded somewhere
+- [ ] Add artifact upload for built output if that becomes useful
+- [ ] Add a badge to the README once the workflow name is stable
 
-- [ ] Create fixture helper for building source trees declaratively.
-- [ ] Create fixture helper for creating unmanaged output entries.
-- [ ] Create fixture helper for corrupt manifest files.
-- [ ] Create fixture helper for broken symlinks.
-- [ ] Create fixture helper for nested output-under-source setups.
-- [ ] Create fixture helper for snapshot-friendly sample projects.
+### Release workflow
 
-### Portability and platform coverage
+- [ ] Confirm the Changesets workflow opens version PRs correctly
+- [ ] Decide whether release PRs should be auto-merged or manually reviewed
+- [ ] Decide whether npm publishing is part of the next milestone or deferred
+- [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
+- [ ] If npm publishing is deferred, make that explicit in docs and workflow comments
+- [ ] Add a release checklist for the first public package release
+- [ ] Confirm release notes render correctly in GitHub Releases
 
-- [ ] Add CI matrix note for Linux and macOS.
-- [ ] Decide whether to add Windows CI now or defer.
-- [ ] Add tests gated for symlink capability if Windows support is attempted.
-- [ ] Add docs note about Node version and symlink permissions.
+### Pages
 
-### Performance confidence
+- [ ] Confirm Pages is enabled in repo settings
+- [ ] Confirm the Pages workflow deploys on `main`
+- [ ] Confirm the custom site path matches the repo name
+- [ ] Add a simple diagram or animation only if it improves understanding
+- [ ] Keep the site static until product messaging stabilizes
 
-- [ ] Add large-tree synthetic benchmark script or test harness.
-- [ ] Add test for many unique skills.
-- [ ] Add test for many shadowed duplicates.
-- [ ] Add measurement note for watch startup on large source sets.
+### Governance and maintenance
 
-## 13. Documentation and product clarity
+- [ ] Add branch protection recommendations to docs
+- [ ] Decide whether `main` requires green CI before merge
+- [ ] Decide whether release PRs require one reviewer or can be self-merged
+- [ ] Add issue labels if support volume grows
+- [ ] Add a lightweight support triage guide
 
-- [x] README exists.
-- [x] Architecture note exists.
-- [x] Test plan exists.
-- [x] Landing page exists.
-- [ ] Update README from “planned commands” to “available commands”.
-- [ ] Add real command output examples from the current implementation.
-- [ ] Add “managed output directory” section to README.
-- [ ] Add “what happens if someone adds a skill directly to output” section to README.
-- [ ] Add “why no wrapper” rationale.
-- [ ] Add “why no FUSE in MVP” rationale.
-- [ ] Add “how to run in background” section.
-- [ ] Add release/install instructions after publishing path is finalized.
-- [ ] Add badges for CI and Pages once stable.
-- [ ] Add concise architecture diagram to landing page.
-- [ ] Add screenshots or sample output blocks to landing page.
-- [ ] Add docs note on current known limitations.
+## Phase 8. Compatibility Follow-Through
 
-## 14. CI, release, and repo operations
+- [ ] Add docs examples for using `skilldir` output as `~/.agents/skills`
+- [ ] Add docs examples for using `skilldir` output as `~/.claude/skills`
+- [ ] Add docs examples for source ordering that prefer project-local skills over global skills
+- [ ] Add fixture trees that mirror common Codex/OpenCode/Claude layouts
+- [ ] Add tests that show the same skill key from three different harness-specific sources
+- [ ] Decide whether to support mirror directories as a first-class feature or keep one output only
+- [ ] Decide whether future per-source labels should be used in compatibility docs
 
-- [x] CI workflow exists.
-- [x] Release workflow exists.
-- [x] Changesets config exists.
-- [ ] Verify Pages deployment from `site/`.
-- [ ] Verify release workflow behavior on a real version PR or tag flow.
-- [ ] Decide whether release workflow should publish to npm or just version/tag.
-- [ ] If npm publish is enabled:
-- [ ] create npm package
-- [ ] add `NPM_TOKEN` secret
-- [ ] add publish access/settings docs
-- [ ] test dry-run publish locally
-- [ ] Add branch protection recommendations to contributing docs.
-- [ ] Add “required checks” recommendations to docs.
-- [ ] Add CODEOWNERS if desired.
-- [ ] Add Dependabot or Renovate if desired.
-- [ ] Verify `.changeset/initial-release.md` flows correctly through the release workflow.
+## Phase 9. Remote Source Support, Materialized Cache, and Future Architecture
 
-## 15. Source labels and richer config design
+This phase intentionally treats remote support as “another source” rather than a replacement for the local model.
 
-- [ ] Design optional `label` field per source.
-- [ ] Decide JSON shape for labeled sources.
-- [ ] Decide backward compatibility with plain string source arrays.
-- [ ] Add status output with label support.
-- [ ] Add JSON output support with labels.
-- [ ] Add tests for labeled and unlabeled mixed configs.
-- [ ] Document migration path if labels are introduced.
+### 9.1. Product contract
 
-## 16. Remote-source and future architecture planning
+- [ ] Decide whether remote support lands in `0.x` or waits for `1.0`
+- [ ] Decide whether remote support is read-only in the first version
+- [ ] Decide whether remote support is opt-in per source entry
+- [ ] Decide whether remote-fetched skills are addressed by skill key only or by key + version
+- [ ] Decide whether remote sources are allowed to override local sources purely by order in `sources[]`
+- [ ] Decide whether remote materialized cache paths are treated as internal implementation details
 
-- [ ] Define “remote materialized cache as another source root” in one architecture note.
-- [ ] Decide whether the remote layer is:
-- [ ] pull-to-cache only
-- [ ] background daemon + cache
-- [ ] registry + content-addressed cache
-- [ ] Define cache directory layout.
-- [ ] Define precedence interaction between remote cache and local sources.
-- [ ] Define trust/security model for fetched skills.
-- [ ] Define invalidation/update rules.
-- [ ] Keep this as design-only until local source MVP is fully hardened.
+### 9.2. Config shape for remote sources
 
-## 17. Immediate next best sequence
+- [ ] Define the config schema for a remote source entry
+- [ ] Decide whether local and remote sources share one union type or separate arrays
+- [ ] Add fields for remote base URL
+- [ ] Add fields for auth mode
+- [ ] Add fields for refresh interval or cache TTL
+- [ ] Add fields for trust/integrity policy
+- [ ] Add fields for per-source label and description
+- [ ] Add docs examples for a mixed local + remote config
+- [ ] Add config validation tests for malformed remote entries
 
-- [ ] Step 1: add config unit tests.
-- [ ] Step 2: add manifest unit tests.
-- [ ] Step 3: add CLI integration tests for `status`, `sync`, and `doctor`.
-- [ ] Step 4: add stable snapshot tests for status and doctor output.
-- [ ] Step 5: add signal-handling and failure-path tests for watch mode.
-- [ ] Step 6: decide `0.x` config format policy.
-- [ ] Step 7: decide duplicate-in-source behavior.
-- [ ] Step 8: document current command behavior in README and landing page.
-- [ ] Step 9: verify Pages and release workflow behavior against the live repo.
-- [ ] Step 10: only then start richer config or remote-source design work.
+### 9.3. Local materialized cache design
+
+- [ ] Pick a cache root, for example under `~/.local/share/skilldir/`
+- [ ] Decide the object directory layout for fetched skill bundles
+- [ ] Decide whether cache objects are keyed by skill name, version, digest, or a combination
+- [ ] Decide where the remote-source manifest or index lives
+- [ ] Decide how cache garbage collection works
+- [ ] Decide whether cache entries are shared across multiple configs on one machine
+- [ ] Add tests for cache reuse between sync runs
+- [ ] Add tests for stale cache cleanup
+
+### 9.4. Resolve and fetch flow
+
+- [ ] Define the local state machine for remote sync:
+- [ ] fetch source index or source-specific metadata
+- [ ] decide candidate skill names available from the remote source
+- [ ] resolve the winning remote skill entry for a requested key
+- [ ] fetch the content only when needed or prefetch it explicitly
+- [ ] materialize the fetched content into the cache
+- [ ] expose the cache directory as a normal local source candidate
+- [ ] Decide whether remote sources prefetch the full index or fetch per skill lazily
+- [ ] Decide whether `status` should show both cache path and remote origin
+- [ ] Decide whether `doctor` should report stale remote metadata separately from local source issues
+
+### 9.5. Archive and extraction strategy
+
+- [ ] Decide whether remote payloads are tarballs, zip files, or raw file lists
+- [ ] Decide whether the remote source returns a digest before download
+- [ ] Decide whether the local client verifies the digest after download
+- [ ] Decide whether extraction happens into a temp directory before rename
+- [ ] Add tests for corrupt archives
+- [ ] Add tests for partial downloads
+- [ ] Add tests for interrupted extraction
+- [ ] Add tests for path traversal attacks in archives
+
+### 9.6. Trust and integrity
+
+- [ ] Decide whether digest verification is mandatory
+- [ ] Decide whether signatures are in scope for the first remote version
+- [ ] Decide whether remote sources can be marked “trusted” or “unsafe”
+- [ ] Decide how auth tokens are stored or read
+- [ ] Decide whether credentials are taken from env vars, config, keychain, or external helpers
+- [ ] Add explicit docs on what is and is not trusted
+- [ ] Add redaction rules for logs and error output
+- [ ] Add tests for missing credentials
+- [ ] Add tests for invalid credentials
+- [ ] Add tests for digest mismatch
+
+### 9.7. Failure modes and fallback behavior
+
+- [ ] Decide what happens if the remote source is unavailable during `sync`
+- [ ] Decide what happens if the remote index can be read but a specific skill fetch fails
+- [ ] Decide whether stale cached content may continue to satisfy the source
+- [ ] Decide whether remote failures are warnings or hard sync failures
+- [ ] Add tests for network timeout
+- [ ] Add tests for 404 skill-not-found
+- [ ] Add tests for 401/403 auth failures
+- [ ] Add tests for malformed server responses
+- [ ] Add tests for stale cache fallback behavior
+
+### 9.8. Compatibility model
+
+- [ ] Ensure remote-fetched skills still end up as ordinary local directories before reconciliation
+- [ ] Ensure the output directory remains just symlinks to local materialized directories
+- [ ] Ensure no harness-specific runtime plugin is required
+- [ ] Add docs that explain remote support does not change the harness contract
+- [ ] Add integration tests mixing local and remote candidates for the same skill key
+- [ ] Add integration tests showing remote source order relative to local sources
+
+### 9.9. Operational tooling
+
+- [ ] Add `doctor` checks for remote cache health
+- [ ] Add `doctor` checks for remote auth state if feasible
+- [ ] Decide whether a dedicated `cache prune` command is needed
+- [ ] Decide whether a dedicated `cache warm` command is needed
+- [ ] Decide whether remote source refresh belongs in `watch` or a separate command
+- [ ] Add logs/metrics for remote fetch counts, failures, and cache hits
+
+### 9.10. Phased rollout plan
+
+- [ ] Phase R1: remote materialized cache treated as a manually populated local source
+- [ ] Phase R2: `skilldir` manages remote index refresh but not lazy fetch
+- [ ] Phase R3: `skilldir` manages fetch + verification + extraction into cache
+- [ ] Phase R4: `watch` mode refreshes remote sources on interval
+- [ ] Phase R5: add stronger trust/integrity guarantees if real usage justifies them
+- [ ] Keep each phase behind clear docs and tests before moving to the next one
+
+## Phase 10. Explicitly Deferred
+
+- [ ] Per-agent policy engines
+- [ ] Wrapper-based harness startup behavior
+- [ ] Automatic movement/adoption of unmanaged output entries
+- [ ] FUSE or virtual filesystems
+- [ ] Rich frontmatter-derived skill identity
+- [ ] Multi-writer sync semantics across machines
+
+## Suggested Next Execution Slice
+
+If work starts immediately, the highest-value slice is:
+
+- [ ] Add `status --json` and `doctor --json`
+- [ ] Add CLI integration tests that execute the built binary
+- [ ] Add snapshot tests for text output
+- [ ] Add lock protection for concurrent syncs
+- [ ] Confirm Pages deployment and release workflow permissions
+- [ ] Add README compatibility examples for Codex/OpenCode/Claude Code
+
+That slice tightens the current product before expanding scope.
