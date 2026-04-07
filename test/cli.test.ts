@@ -16,10 +16,14 @@ function runCli(args: string[], cwd: string) {
 }
 
 function runBuiltCli(args: string[], cwd: string) {
-  return spawnSync(process.execPath, [path.join(cwd, 'dist', 'cli.js'), ...args], {
-    cwd,
-    encoding: 'utf8',
-  });
+  return spawnSync(
+    process.execPath,
+    [path.join(cwd, 'dist', 'cli.js'), ...args],
+    {
+      cwd,
+      encoding: 'utf8',
+    },
+  );
 }
 
 function ensureBuilt(cwd: string) {
@@ -61,7 +65,10 @@ describe('cli', () => {
     await createSkill(source, 'playwright');
     await writeConfig(configPath, { sources: [source], output });
 
-    const result = runCli(['status', '--config', configPath, '--json'], repoRoot);
+    const result = runCli(
+      ['status', '--config', configPath, '--json'],
+      repoRoot,
+    );
     expect(result.status).toBe(0);
     const parsed = JSON.parse(result.stdout) as {
       resolved: Array<{ name: string }>;
@@ -80,14 +87,19 @@ describe('cli', () => {
     await fs.mkdir(path.join(output, 'manual'), { recursive: true });
     await writeConfig(configPath, { sources: [source], output });
 
-    const result = runCli(['doctor', '--config', configPath, '--json'], repoRoot);
+    const result = runCli(
+      ['doctor', '--config', configPath, '--json'],
+      repoRoot,
+    );
     expect(result.status).toBe(1);
     const parsed = JSON.parse(result.stdout) as {
       issues: Array<{ code: string }>;
       count: number;
     };
     expect(parsed.count).toBeGreaterThan(0);
-    expect(parsed.issues.some((issue) => issue.code === 'unmanaged-output-entry')).toBe(true);
+    expect(
+      parsed.issues.some((issue) => issue.code === 'unmanaged-output-entry'),
+    ).toBe(true);
   });
 
   it('exits non-zero for missing config files', () => {
@@ -131,7 +143,10 @@ describe('cli', () => {
     await createSkill(source, 'playwright');
     await writeConfig(configPath, { sources: [source], output });
 
-    const result = runBuiltCli(['status', '--config', configPath, '--json'], repoRoot);
+    const result = runBuiltCli(
+      ['status', '--config', configPath, '--json'],
+      repoRoot,
+    );
     expect(result.status).toBe(0);
     const parsed = JSON.parse(result.stdout) as {
       schemaVersion: number;

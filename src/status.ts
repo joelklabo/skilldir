@@ -57,7 +57,9 @@ export function renderStatusJson(result: SyncResult): string {
         removed: result.removed.length,
       },
       resolved: [...result.resolved.entries()]
-        .sort(([leftName], [rightName]) => leftName.localeCompare(rightName, 'en'))
+        .sort(([leftName], [rightName]) =>
+          leftName.localeCompare(rightName, 'en'),
+        )
         .map(([name, entry]) => ({
           name,
           winner: entry.winner.dir,

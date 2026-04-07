@@ -1,5 +1,5 @@
 ---
-"skilldir": minor
+'skilldir': minor
 ---
 
 Initial public release of `skilldir`.

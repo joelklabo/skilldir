@@ -1,5 +1,8 @@
 # skilldir
 
+[![CI](https://github.com/joelklabo/skilldir/actions/workflows/ci.yml/badge.svg)](https://github.com/joelklabo/skilldir/actions/workflows/ci.yml)
+[![Pages](https://img.shields.io/badge/pages-live-166534)](https://joelklabo.github.io/skilldir/)
+
 `skilldir` builds a normal directory of symlinks from an ordered list of skill sources.
 
 The MVP rule is intentionally small:
@@ -165,6 +168,12 @@ pnpm pack
 pnpm add --global ./skilldir-0.1.0.tgz
 skilldir status --help
 ```
+
+## Releases
+
+Changesets manages versioning for this repo. npm publishing is intentionally deferred right now, so release automation is limited to versioning and release PR flow.
+
+The current GitHub Actions blocker is repository policy: Actions can push the `changeset-release/main` branch, but the repo is not yet configured to let Actions open the version PR.
 
 ## CLI Help
 

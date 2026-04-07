@@ -26,6 +26,15 @@ pnpm build
 
 The GitHub release workflow currently creates and updates the release branch, but the repository still needs GitHub Actions permission to open the version PR.
 
+### Release Checklist
+
+- Run `pnpm check`.
+- Add or update a changeset with `pnpm changeset`.
+- Review the generated version changes with `pnpm version-packages`.
+- Confirm the Pages site still matches the current CLI/docs behavior.
+- Push only the intended release-prep changes.
+- Verify whether the repository settings now allow GitHub Actions to open the version PR.
+
 ## Test Fixtures
 
 - Put reusable config and tree fixtures under `test/fixtures`.
@@ -46,3 +55,17 @@ python3 -m http.server 8000 --directory site
 - Run `pnpm check` before pushing.
 - Do not mix unrelated backlog cleanup into the same commit just because the files are nearby.
 - Prefer direct, descriptive commit messages over catch-all “update docs” commits.
+
+## Branch Protection Recommendations
+
+- Require green CI on `main` before merge.
+- Require at least one review for release-policy or workflow changes.
+- Block force-pushes to `main`.
+- Restrict direct pushes to `main` if the repo starts taking outside contributions.
+
+## Support Triage
+
+- Reproduce with `pnpm check` first.
+- If the report is about discovery or reconciliation, ask for the exact config and a minimal source tree.
+- If the report is about release automation, check repository Actions permissions before changing workflow code.
+- If the report is about Pages content, compare `site/index.html` with the current README and CLI output.

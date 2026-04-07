@@ -12,11 +12,15 @@ async function statOrNull(filePath: string) {
   }
 }
 
-async function getDirectoryInfo(root: string): Promise<{ realPath: string } | null> {
+async function getDirectoryInfo(
+  root: string,
+): Promise<{ realPath: string } | null> {
   const stats = await statOrNull(root);
   if (!stats) return null;
   if (stats.isDirectory()) {
-    return { realPath: await fs.realpath(root).catch(() => path.resolve(root)) };
+    return {
+      realPath: await fs.realpath(root).catch(() => path.resolve(root)),
+    };
   }
   if (!stats.isSymbolicLink()) return null;
   const targetStats = await fs.stat(root).catch(() => null);

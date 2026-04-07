@@ -47,7 +47,7 @@ The remaining work is organized in execution order.
 ### Config loading
 
 - [x] Add a config version field or explicitly document versionless config
-- [ ] Support `--config` consistently on every command
+- [x] Support `--config` consistently on every command
 - [x] Add better config-file-not-found errors
 - [x] Add better config-parse errors with filename and line/column when possible
 - [x] Expand `~` in configured paths
@@ -193,10 +193,10 @@ The remaining work is organized in execution order.
 
 - [x] Confirm the CI workflow runs on PRs and on `main`
 - [x] Confirm CI uses `pnpm install --frozen-lockfile`
-- [ ] Decide whether CI should also run `format:check`
+- [x] Decide whether CI should also run `format:check`
 - [ ] Decide whether coverage should be uploaded somewhere
 - [ ] Add artifact upload for built output if that becomes useful
-- [ ] Add a badge to the README once the workflow name is stable
+- [x] Add a badge to the README once the workflow name is stable
 
 ### Release workflow
 
@@ -205,25 +205,25 @@ The remaining work is organized in execution order.
 - [ ] Decide whether release PRs should be auto-merged or manually reviewed
 - [ ] Decide whether npm publishing is part of the next milestone or deferred
 - [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
-- [ ] If npm publishing is deferred, make that explicit in docs and workflow comments
-- [ ] Add a release checklist for the first public package release
+- [x] If npm publishing is deferred, make that explicit in docs and workflow comments
+- [x] Add a release checklist for the first public package release
 - [ ] Confirm release notes render correctly in GitHub Releases
 
 ### Pages
 
-- [ ] Confirm Pages is enabled in repo settings
+- [x] Confirm Pages is enabled in repo settings
 - [x] Confirm the Pages workflow deploys on `main`
-- [ ] Confirm the custom site path matches the repo name
+- [x] Confirm the custom site path matches the repo name
 - [ ] Add a simple diagram or animation only if it improves understanding
 - [ ] Keep the site static until product messaging stabilizes
 
 ### Governance and maintenance
 
-- [ ] Add branch protection recommendations to docs
+- [x] Add branch protection recommendations to docs
 - [ ] Decide whether `main` requires green CI before merge
 - [ ] Decide whether release PRs require one reviewer or can be self-merged
 - [ ] Add issue labels if support volume grows
-- [ ] Add a lightweight support triage guide
+- [x] Add a lightweight support triage guide
 
 ## Phase 8. Compatibility Follow-Through
 

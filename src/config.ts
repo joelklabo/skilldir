@@ -17,7 +17,10 @@ function expandHome(value: string): string {
 }
 
 export async function loadConfig(configPath: string): Promise<SyncConfig> {
-  const resolvedConfigPath = path.resolve(process.cwd(), expandHome(configPath));
+  const resolvedConfigPath = path.resolve(
+    process.cwd(),
+    expandHome(configPath),
+  );
   let raw: string;
   try {
     raw = await fs.readFile(resolvedConfigPath, 'utf8');

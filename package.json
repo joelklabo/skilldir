@@ -18,7 +18,7 @@
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "changeset": "changeset",
     "clean": "rm -rf dist coverage .tmp",
     "dev": "tsx src/cli.ts",
