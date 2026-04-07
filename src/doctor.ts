@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import path from 'node:path';
 import { readManifest } from './manifest.js';
 import { SyncResult, DoctorIssue, SyncConfig } from './types.js';
@@ -12,6 +13,36 @@ async function exists(filePath: string): Promise<boolean> {
   }
 }
 
+async function canReadDirectory(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath, fsSync.constants.R_OK | fsSync.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function isManifestCorrupt(outputDir: string): Promise<boolean> {
+  try {
+    const raw = await fs.readFile(
+      path.join(outputDir, '.skilldir-manifest.json'),
+      'utf8',
+    );
+    const parsed: unknown = JSON.parse(raw);
+    return !(
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      (parsed as { version?: unknown }).version === 1 &&
+      typeof (parsed as { managed?: unknown }).managed === 'object' &&
+      (parsed as { managed?: unknown }).managed !== null
+    );
+  } catch (error) {
+    const nodeError = error as NodeJS.ErrnoException;
+    if (nodeError?.code === 'ENOENT') return false;
+    return true;
+  }
+}
+
 export async function runDoctor(
   config: SyncConfig,
   result: SyncResult,
@@ -20,7 +51,23 @@ export async function runDoctor(
   for (const source of config.sources) {
     if (!(await exists(source))) {
       issues.push({ code: 'missing-source', source });
+      continue;
     }
+    if (!(await canReadDirectory(source))) {
+      issues.push({ code: 'source-permission-denied', path: source });
+    }
+  }
+  if (
+    (await exists(config.output)) &&
+    !(await canReadDirectory(config.output))
+  ) {
+    issues.push({ code: 'output-permission-denied', path: config.output });
+  }
+  if (await isManifestCorrupt(config.output)) {
+    issues.push({
+      code: 'manifest-corrupt',
+      path: path.join(config.output, '.skilldir-manifest.json'),
+    });
   }
   for (const [skill, entry] of result.resolved) {
     for (const shadowed of entry.shadowed) {
@@ -74,6 +121,12 @@ export function renderDoctor(issues: DoctorIssue[]): string {
       switch (issue.code) {
         case 'missing-source':
           return `missing source: ${issue.source}`;
+        case 'source-permission-denied':
+          return `source permission denied: ${issue.path}`;
+        case 'output-permission-denied':
+          return `output permission denied: ${issue.path}`;
+        case 'manifest-corrupt':
+          return `manifest corrupt: ${issue.path}`;
         case 'broken-managed-symlink':
           return `broken managed symlink: ${issue.path} -> ${issue.target}`;
         case 'unmanaged-output-entry':

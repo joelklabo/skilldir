@@ -14,6 +14,8 @@
 - env var interpolation is intentionally unsupported in `0.x`
 - Windows behavior is best-effort in `0.x`
 - one output directory per config is the supported model in `0.x`
+- duplicate skill names within one source are tolerated as warnings in `0.x`
+- watch mode is expected to continue when a source disappears temporarily
 
 ## Core flow
 

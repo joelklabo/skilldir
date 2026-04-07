@@ -63,6 +63,12 @@ python3 -m http.server 8000 --directory site
 - Block force-pushes to `main`.
 - Restrict direct pushes to `main` if the repo starts taking outside contributions.
 
+Current maintainer policy:
+
+- keep `main` gated on green CI
+- review release PRs manually
+- keep npm publishing deferred until the package contract is considered stable
+
 ## Support Triage
 
 - Reproduce with `pnpm check` first.

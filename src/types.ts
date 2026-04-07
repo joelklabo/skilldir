@@ -53,6 +53,18 @@ export type DoctorIssue =
       source: string;
     }
   | {
+      code: 'source-permission-denied';
+      path: string;
+    }
+  | {
+      code: 'output-permission-denied';
+      path: string;
+    }
+  | {
+      code: 'manifest-corrupt';
+      path: string;
+    }
+  | {
       code: 'broken-managed-symlink';
       skill: string;
       path: string;

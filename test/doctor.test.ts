@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { renderDoctor, renderDoctorJson, runDoctor } from '../src/doctor.js';
+import { manifestPath } from '../src/manifest.js';
 import { runSync } from '../src/sync.js';
 import { createSkill, makeTempDir } from './helpers.js';
 
@@ -106,5 +107,48 @@ describe('doctor', () => {
         "count": 2
       }"
     `);
+  });
+
+  it('reports a corrupt manifest file', async () => {
+    const root = await makeTempDir('skilldir-doctor-manifest-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'out');
+    await createSkill(source, 'playwright');
+
+    const result = await runSync({ sources: [source], output });
+    await fs.writeFile(manifestPath(output), '{not-json\n', 'utf8');
+
+    const issues = await runDoctor({ sources: [source], output }, result);
+    expect(issues).toContainEqual({
+      code: 'manifest-corrupt',
+      path: manifestPath(output),
+    });
+  });
+
+  it('reports source and output permission failures', async () => {
+    const root = await makeTempDir('skilldir-doctor-permissions-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'out');
+    await createSkill(source, 'playwright');
+
+    const result = await runSync({ sources: [source], output });
+
+    await fs.chmod(source, 0o000);
+    await fs.chmod(output, 0o000);
+
+    try {
+      const issues = await runDoctor({ sources: [source], output }, result);
+      expect(issues).toContainEqual({
+        code: 'source-permission-denied',
+        path: source,
+      });
+      expect(issues).toContainEqual({
+        code: 'output-permission-denied',
+        path: output,
+      });
+    } finally {
+      await fs.chmod(source, 0o755);
+      await fs.chmod(output, 0o755);
+    }
   });
 });

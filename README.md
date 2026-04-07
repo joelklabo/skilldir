@@ -21,12 +21,18 @@ The MVP rule is intentionally small:
 - env var interpolation is not supported in `0.x`
 - Windows support is best-effort only in `0.x`
 - mirror directories are not a first-class feature in `0.x`; use one output per config
+- duplicate skill names within one source are warnings, not hard errors, in `0.x`
+- `sync` prints the full status view by default in `0.x`
+- `doctor` prints `doctor: ok` on success in `0.x`
+- watch mode continues running if a source disappears temporarily
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
 ## Why
 
 Different agent tools look for skills in different places. `skilldir` lets you define a single generated directory that represents the precedence union of several source trees.
+
+The project site remains a simple static page in `0.x`; product messaging is intentionally kept close to the CLI and README until the remote-source work lands.
 
 ## Commands
 
@@ -177,6 +183,9 @@ Machine-readable `doctor --json`:
 Doctor issue codes:
 
 - `missing-source`
+- `source-permission-denied`
+- `output-permission-denied`
+- `manifest-corrupt`
 - `broken-managed-symlink`
 - `unmanaged-output-entry`
 - `shadowed-skill`
@@ -212,6 +221,11 @@ skilldir status --help
 Changesets manages versioning for this repo. npm publishing is intentionally deferred right now, so release automation is limited to versioning and release PR flow.
 
 The current GitHub Actions blocker is repository policy: Actions can push the `changeset-release/main` branch, but the repo is not yet configured to let Actions open the version PR.
+
+Current release policy for `0.x`:
+
+- release PRs should be reviewed manually
+- npm publishing remains deferred
 
 ## CLI Help
 

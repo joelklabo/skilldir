@@ -38,7 +38,7 @@ The remaining work is organized in execution order.
 - [x] Decide whether `status --json` and `doctor --json` are now stable API surfaces
 - [x] Decide whether the manifest file is part of the supported public implementation contract or intentionally private
 - [x] Decide how much Windows support is explicitly promised in `0.x`
-- [ ] Decide whether duplicate skill names within a single source are warnings or hard errors
+- [x] Decide whether duplicate skill names within a single source are warnings or hard errors
 - [x] Decide whether hidden directories other than `.git` are scanned by default or ignored by default
 - [x] Write these decisions down in the README and architecture docs
 
@@ -115,9 +115,9 @@ The remaining work is organized in execution order.
 - [x] Define a stable JSON schema for `doctor --json`
 - [x] Add snapshot tests for human-readable doctor output
 - [x] Add snapshot tests for JSON doctor output
-- [ ] Add explicit checks for output directory permission failures
-- [ ] Add explicit checks for source directory permission failures
-- [ ] Add explicit checks for manifest corruption
+- [x] Add explicit checks for output directory permission failures
+- [x] Add explicit checks for source directory permission failures
+- [x] Add explicit checks for manifest corruption
 - [x] Decide which doctor issues should produce non-zero exit codes
 - [x] Add an explicit machine-readable code list to the docs
 
@@ -128,8 +128,8 @@ The remaining work is organized in execution order.
 - [x] Add a top-level `--version`
 - [ ] Add `--quiet`
 - [ ] Add `--verbose`
-- [ ] Decide whether `sync` should print full status or just a compact summary by default
-- [ ] Decide whether `doctor` should be quiet on success or print `doctor: ok`
+- [x] Decide whether `sync` should print full status or just a compact summary by default
+- [x] Decide whether `doctor` should be quiet on success or print `doctor: ok`
 
 ## Phase 4. Watch Mode Hardening
 
@@ -141,8 +141,8 @@ The remaining work is organized in execution order.
 - [x] Add tests for interval-driven periodic resync
 - [ ] Add overflow/backstop behavior if the watcher misses events
 - [ ] Add log messages that distinguish filesystem-triggered syncs from periodic syncs
-- [ ] Decide whether watch mode should continue when a source disappears temporarily
-- [ ] Decide whether watch mode should emit structured logs in a future `--json` mode
+- [x] Decide whether watch mode should continue when a source disappears temporarily
+- [x] Decide whether watch mode should emit structured logs in a future `--json` mode
 
 ## Phase 5. CLI Integration and End-to-End Tests
 
@@ -157,7 +157,7 @@ The remaining work is organized in execution order.
 - [x] Add integration tests for unmanaged output conflicts
 - [x] Add integration tests for precedence changes between sync runs
 - [x] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
-- [ ] Decide whether to add large-tree performance tests in CI or keep them local-only
+- [x] Decide whether to add large-tree performance tests in CI or keep them local-only
 
 ## Phase 6. Documentation Quality
 
@@ -174,7 +174,7 @@ The remaining work is organized in execution order.
 
 ### Architecture docs
 
-- [ ] Add a one-page architecture diagram to the site or docs
+- [x] Add a one-page architecture diagram to the site or docs
 - [x] Add a short “invariants” section
 - [x] Add a “why the manifest exists” section
 - [x] Add a “why source order beats priorities in the MVP” section
@@ -202,8 +202,8 @@ The remaining work is organized in execution order.
 
 - [ ] Confirm the Changesets workflow opens version PRs correctly
   - Current state: the workflow pushes `changeset-release/main`, but GitHub Actions is not currently permitted by repo settings to create the version PR.
-- [ ] Decide whether release PRs should be auto-merged or manually reviewed
-- [ ] Decide whether npm publishing is part of the next milestone or deferred
+- [x] Decide whether release PRs should be auto-merged or manually reviewed
+- [x] Decide whether npm publishing is part of the next milestone or deferred
 - [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
 - [x] If npm publishing is deferred, make that explicit in docs and workflow comments
 - [x] Add a release checklist for the first public package release
@@ -215,13 +215,13 @@ The remaining work is organized in execution order.
 - [x] Confirm the Pages workflow deploys on `main`
 - [x] Confirm the custom site path matches the repo name
 - [ ] Add a simple diagram or animation only if it improves understanding
-- [ ] Keep the site static until product messaging stabilizes
+- [x] Keep the site static until product messaging stabilizes
 
 ### Governance and maintenance
 
 - [x] Add branch protection recommendations to docs
-- [ ] Decide whether `main` requires green CI before merge
-- [ ] Decide whether release PRs require one reviewer or can be self-merged
+- [x] Decide whether `main` requires green CI before merge
+- [x] Decide whether release PRs require one reviewer or can be self-merged
 - [ ] Add issue labels if support volume grows
 - [x] Add a lightweight support triage guide
 
