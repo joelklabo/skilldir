@@ -35,4 +35,44 @@ describe('discoverSkills', () => {
     const entries = await discoverSkills({ sources: [source], output });
     expect(entries.map((entry) => entry.name)).toEqual(['real']);
   });
+
+  it('follows a symlinked source root', async () => {
+    const root = await makeTempDir('skilldir-discover-source-link-');
+    const realSource = path.join(root, 'real-source');
+    const linkedSource = path.join(root, 'linked-source');
+    const output = path.join(root, 'output');
+    await createSkill(realSource, 'playwright');
+    await fs.symlink(realSource, linkedSource);
+
+    const entries = await discoverSkills({ sources: [linkedSource], output });
+
+    expect(entries.map((entry) => entry.name)).toEqual(['playwright']);
+    expect(entries[0]?.source).toBe(path.resolve(linkedSource));
+  });
+
+  it('follows symlinked skill directories inside a source', async () => {
+    const root = await makeTempDir('skilldir-discover-skill-link-');
+    const source = path.join(root, 'source');
+    const library = path.join(root, 'library');
+    const output = path.join(root, 'output');
+    const realSkill = await createSkill(library, 'playwright');
+    await fs.mkdir(source, { recursive: true });
+    await fs.symlink(realSkill, path.join(source, 'playwright'));
+
+    const entries = await discoverSkills({ sources: [source], output });
+
+    expect(entries.map((entry) => entry.name)).toEqual(['playwright']);
+    expect(entries[0]?.dir).toBe(path.join(source, 'playwright'));
+  });
+
+  it('keeps valid skill names with spaces and punctuation', async () => {
+    const root = await makeTempDir('skilldir-discover-punctuation-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    await createSkill(source, 'playwright tools!');
+
+    const entries = await discoverSkills({ sources: [source], output });
+
+    expect(entries.map((entry) => entry.name)).toEqual(['playwright tools!']);
+  });
 });

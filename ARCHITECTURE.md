@@ -10,6 +10,7 @@
 - precedence: first source in the array wins
 - config: versionless JSON for the `0.x` line
 - machine-readable output: `status --json` and `doctor --json` with schema version `1`
+- discovery follows symlinked source roots and symlinked skill directories
 
 ## Core flow
 

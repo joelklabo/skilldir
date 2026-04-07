@@ -60,12 +60,12 @@ The remaining work is organized in execution order.
 
 ### Discovery
 
-- [ ] Add explicit tests for symlinked source roots
-- [ ] Add explicit tests for symlinked skill directories inside a source
+- [x] Add explicit tests for symlinked source roots
+- [x] Add explicit tests for symlinked skill directories inside a source
 - [ ] Add explicit tests for unreadable directories
 - [ ] Add explicit tests for nested output directories beneath a source
 - [ ] Add explicit tests for very deep directory trees
-- [ ] Add explicit tests for skills with spaces and punctuation in folder names
+- [x] Add explicit tests for skills with spaces and punctuation in folder names
 - [ ] Add explicit tests for case-sensitive and case-insensitive collisions where possible
 - [ ] Decide whether recursive scanning should be depth-limited
 - [ ] Decide whether directories beginning with `.` should be skipped by default
@@ -73,10 +73,10 @@ The remaining work is organized in execution order.
 
 ### Resolution
 
-- [ ] Preserve deterministic ordering for winners
-- [ ] Preserve deterministic ordering for shadowed candidates
-- [ ] Add tests for three or more colliding sources for one skill
-- [ ] Add tests for multiple unique skills across many sources
+- [x] Preserve deterministic ordering for winners
+- [x] Preserve deterministic ordering for shadowed candidates
+- [x] Add tests for three or more colliding sources for one skill
+- [x] Add tests for multiple unique skills across many sources
 - [x] Add a human-readable explanation of the precedence rule to `status`
 - [ ] Decide whether `status` should optionally show source index numbers
 - [ ] Decide whether `status` should optionally show source labels
@@ -134,7 +134,7 @@ The remaining work is organized in execution order.
 ## Phase 4. Watch Mode Hardening
 
 - [ ] Add tests for startup sync followed by change-driven sync
-- [ ] Add tests for repeated burst changes across multiple paths
+- [x] Add tests for repeated burst changes across multiple paths
 - [ ] Add tests for source directory deletion and recreation
 - [ ] Add tests for output directory deletion while watch mode is running
 - [ ] Add tests for signal handling and clean shutdown

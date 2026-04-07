@@ -11,6 +11,7 @@ The MVP rule is intentionally small:
 - the output directory is managed by `skilldir`
 - config is versionless JSON in `0.x`
 - `status --json` and `doctor --json` use schema version `1` in `0.x`
+- symlinked source roots and symlinked skill directories are discovered normally
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
