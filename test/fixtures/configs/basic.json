@@ -1,0 +1,7 @@
+{
+  "sources": [
+    "../../../test/fixtures/example/source-a",
+    "../../../test/fixtures/example/source-b"
+  ],
+  "output": "../../../test/fixtures/example/output"
+}

@@ -1,0 +1,58 @@
+{
+  "name": "skilldir",
+  "version": "0.1.0",
+  "description": "Materialize a first-source-wins union of AI skill directories as an ordinary symlink folder.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "skilldir": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "changeset": "changeset",
+    "clean": "rm -rf dist coverage .tmp",
+    "dev": "tsx src/cli.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "status:fixture": "tsx src/cli.ts status --config ./test/fixtures/configs/basic.json",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "version-packages": "changeset version"
+  },
+  "keywords": [
+    "skills",
+    "agents",
+    "cli",
+    "codex",
+    "claude",
+    "opencode"
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.29.5",
+    "@eslint/js": "^9.25.1",
+    "@types/node": "^24.6.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.25.1",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.30.1",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "commander": "^14.0.1"
+  }
+}

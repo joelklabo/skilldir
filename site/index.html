@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>skilldir</title>
+    <style>
+      :root {
+        --bg: #f4efe4;
+        --panel: #fffaf0;
+        --ink: #1a1f1c;
+        --muted: #59615b;
+        --accent: #166534;
+        --line: #d7cfbf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(22, 101, 52, 0.12),
+            transparent 30%
+          ),
+          linear-gradient(180deg, #f8f3e8 0%, var(--bg) 100%);
+        color: var(--ink);
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 64px 24px 96px;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 6vw, 5rem);
+        line-height: 0.95;
+        margin: 0 0 12px;
+      }
+
+      p {
+        color: var(--muted);
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 24px;
+        margin-top: 28px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.05);
+      }
+
+      pre {
+        overflow: auto;
+        background: #101412;
+        color: #eef7f0;
+        border-radius: 14px;
+        padding: 16px;
+      }
+
+      code {
+        font-family: 'SFMono-Regular', 'Menlo', monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>skilldir</p>
+      <h1>One ordinary skills folder. Ordered sources. First source wins.</h1>
+      <p>
+        skilldir scans multiple skill trees and materializes the resolved set as
+        normal symlinks. Existing agent harnesses can keep reading a plain
+        directory without any plugin, wrapper, or custom protocol.
+      </p>
+
+      <section class="panel">
+        <h2>Config</h2>
+        <pre><code>{
+  "sources": [
+    "/home/honk/code/project/.agents/skills",
+    "/home/honk/.codex/skills",
+    "/home/honk/.claude/skills"
+  ],
+  "output": "/home/honk/.agents/skills"
+}</code></pre>
+      </section>
+
+      <section class="panel">
+        <h2>Status Output</h2>
+        <pre><code>playwright -> /home/honk/.codex/skills/playwright
+  shadowed:
+  - /home/honk/.claude/skills/playwright
+
+docs -> /home/honk/code/project/.agents/skills/docs</code></pre>
+      </section>
+    </main>
+  </body>
+</html>
