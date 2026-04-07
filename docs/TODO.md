@@ -32,14 +32,14 @@ The remaining work is organized in execution order.
 
 ## Phase 1. Define the `0.x` Product Contract
 
-- [ ] Decide whether JSON remains the only config format for the full `0.x` line
-- [ ] Decide whether `skilldir` will treat source labels as cosmetic metadata or part of the public config contract
+- [x] Decide whether JSON remains the only config format for the full `0.x` line
+- [x] Decide whether `skilldir` will treat source labels as cosmetic metadata or part of the public config contract
 - [x] Decide whether the canonical example output path in docs should be `~/.agents/skills`
 - [x] Decide whether `status --json` and `doctor --json` are now stable API surfaces
 - [x] Decide whether the manifest file is part of the supported public implementation contract or intentionally private
-- [ ] Decide how much Windows support is explicitly promised in `0.x`
+- [x] Decide how much Windows support is explicitly promised in `0.x`
 - [ ] Decide whether duplicate skill names within a single source are warnings or hard errors
-- [ ] Decide whether hidden directories other than `.git` are scanned by default or ignored by default
+- [x] Decide whether hidden directories other than `.git` are scanned by default or ignored by default
 - [x] Write these decisions down in the README and architecture docs
 
 ## Phase 2. Core CLI Hardening
@@ -54,8 +54,8 @@ The remaining work is organized in execution order.
 - [x] Normalize all configured paths to absolute paths
 - [x] Resolve relative paths from the config file directory, not the shell cwd
 - [x] Add explicit tests for path normalization
-- [ ] Decide whether env var interpolation is supported
-- [ ] If env var interpolation is supported, define exact syntax and escaping behavior
+- [x] Decide whether env var interpolation is supported
+- [x] If env var interpolation is supported, define exact syntax and escaping behavior
 - [ ] Add config fixtures covering valid and invalid cases
 
 ### Discovery
@@ -152,11 +152,11 @@ The remaining work is organized in execution order.
 - [x] Add CLI tests for `status --json`
 - [x] Add CLI tests for `doctor`
 - [x] Add CLI tests for error cases like missing config and invalid config
-- [ ] Add integration tests for nested source/output combinations
+- [x] Add integration tests for nested source/output combinations
 - [x] Add integration tests for broken symlinks in the output tree
 - [x] Add integration tests for unmanaged output conflicts
 - [x] Add integration tests for precedence changes between sync runs
-- [ ] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
+- [x] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
 - [ ] Decide whether to add large-tree performance tests in CI or keep them local-only
 
 ## Phase 6. Documentation Quality
@@ -170,7 +170,7 @@ The remaining work is organized in execution order.
 - [x] Add sample `status` and `doctor` output
 - [x] Add troubleshooting section for unmanaged output entries
 - [x] Add troubleshooting section for permissions and broken symlinks
-- [ ] Add badges for CI and release status
+- [x] Add badges for CI and release status
 
 ### Architecture docs
 
@@ -227,13 +227,13 @@ The remaining work is organized in execution order.
 
 ## Phase 8. Compatibility Follow-Through
 
-- [ ] Add docs examples for using `skilldir` output as `~/.agents/skills`
-- [ ] Add docs examples for using `skilldir` output as `~/.claude/skills`
-- [ ] Add docs examples for source ordering that prefer project-local skills over global skills
-- [ ] Add fixture trees that mirror common Codex/OpenCode/Claude layouts
-- [ ] Add tests that show the same skill key from three different harness-specific sources
-- [ ] Decide whether to support mirror directories as a first-class feature or keep one output only
-- [ ] Decide whether future per-source labels should be used in compatibility docs
+- [x] Add docs examples for using `skilldir` output as `~/.agents/skills`
+- [x] Add docs examples for using `skilldir` output as `~/.claude/skills`
+- [x] Add docs examples for source ordering that prefer project-local skills over global skills
+- [x] Add fixture trees that mirror common Codex/OpenCode/Claude layouts
+- [x] Add tests that show the same skill key from three different harness-specific sources
+- [x] Decide whether to support mirror directories as a first-class feature or keep one output only
+- [x] Decide whether future per-source labels should be used in compatibility docs
 
 ## Phase 9. Remote Source Support, Materialized Cache, and Future Architecture
 

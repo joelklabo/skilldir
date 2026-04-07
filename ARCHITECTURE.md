@@ -11,6 +11,9 @@
 - config: versionless JSON for the `0.x` line
 - machine-readable output: `status --json` and `doctor --json` with schema version `1`
 - discovery follows symlinked source roots and symlinked skill directories
+- env var interpolation is intentionally unsupported in `0.x`
+- Windows behavior is best-effort in `0.x`
+- one output directory per config is the supported model in `0.x`
 
 ## Core flow
 
@@ -18,6 +21,28 @@
 2. Resolve conflicts with first-source-wins.
 3. Reconcile the output directory to match the resolved set.
 4. Report the winner/shadowed state through `status` and health problems through `doctor`.
+
+## Diagram
+
+```text
+ordered sources
+  1. project/.agents/skills
+  2. ~/.codex/skills
+  3. ~/.claude/skills
+           |
+           v
+      discovery walk
+           |
+           v
+  first-source-wins resolution
+           |
+           v
+ managed output symlink dir
+     ~/.agents/skills
+           |
+           v
+ existing harnesses read a normal folder
+```
 
 ## Invariants
 

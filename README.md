@@ -1,6 +1,7 @@
 # skilldir
 
 [![CI](https://github.com/joelklabo/skilldir/actions/workflows/ci.yml/badge.svg)](https://github.com/joelklabo/skilldir/actions/workflows/ci.yml)
+[![Release](https://github.com/joelklabo/skilldir/actions/workflows/release.yml/badge.svg)](https://github.com/joelklabo/skilldir/actions/workflows/release.yml)
 [![Pages](https://img.shields.io/badge/pages-live-166534)](https://joelklabo.github.io/skilldir/)
 
 `skilldir` builds a normal directory of symlinks from an ordered list of skill sources.
@@ -12,9 +13,14 @@ The MVP rule is intentionally small:
 - sources are scanned in order
 - first source wins
 - the output directory is managed by `skilldir`
-- config is versionless JSON in `0.x`
+- JSON is the only supported config format in `0.x`
 - `status --json` and `doctor --json` use schema version `1` in `0.x`
 - symlinked source roots and symlinked skill directories are discovered normally
+- hidden directories other than `.git` are scanned in `0.x`
+- source labels are not part of the public config contract in `0.x`
+- env var interpolation is not supported in `0.x`
+- Windows support is best-effort only in `0.x`
+- mirror directories are not a first-class feature in `0.x`; use one output per config
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
@@ -54,6 +60,19 @@ The MVP config format is JSON for simplicity.
 
 ## Compatibility Examples
 
+Using `skilldir` as the canonical `~/.agents/skills` directory:
+
+```json
+{
+  "sources": [
+    "/home/honk/code/project/.agents/skills",
+    "/home/honk/.codex/skills",
+    "/home/honk/.claude/skills"
+  ],
+  "output": "/home/honk/.agents/skills"
+}
+```
+
 Project-local skills winning over global shared skills:
 
 ```json
@@ -77,6 +96,18 @@ Using `skilldir` to materialize a Claude-compatible skills directory:
   ],
   "output": "/home/honk/.claude/skills"
 }
+```
+
+Three-source compatibility precedence for the same skill key:
+
+```text
+sources[0] = /home/honk/code/project/.agents/skills
+sources[1] = /home/honk/.codex/skills
+sources[2] = /home/honk/.claude/skills
+
+playwright resolves to the project-local skill
+codex-only resolves to the Codex home skill
+claude-only resolves to the Claude home skill
 ```
 
 ## Output Examples

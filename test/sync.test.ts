@@ -2,7 +2,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { runSync } from '../src/sync.js';
-import { createSkill, makeTempDir, readSymlinkTarget } from './helpers.js';
+import {
+  copyFixtureTree,
+  createSkill,
+  makeTempDir,
+  readSymlinkTarget,
+} from './helpers.js';
 
 const tempDirs: string[] = [];
 
@@ -67,5 +72,64 @@ describe('runSync', () => {
       playwrightB,
     );
     expect(second.resolved.get('playwright')?.winner.dir).toBe(playwrightB);
+  });
+
+  it('handles a nested output directory beneath a source tree', async () => {
+    const root = await makeTempDir('skilldir-sync-nested-output-');
+    tempDirs.push(root);
+    const source = path.join(root, 'source');
+    const output = path.join(source, '.agents', 'skills');
+
+    await createSkill(source, 'repo-skill');
+    await fs.mkdir(output, { recursive: true });
+
+    const result = await runSync({
+      sources: [source],
+      output,
+    });
+
+    expect(result.resolved.get('repo-skill')?.winner.dir).toBe(
+      path.join(source, 'repo-skill'),
+    );
+    expect(await readSymlinkTarget(path.join(output, 'repo-skill'))).toBe(
+      path.join(source, 'repo-skill'),
+    );
+  });
+
+  it('resolves the same skill key across project, codex, and claude fixture trees', async () => {
+    const root = await copyFixtureTree('harnesses', 'skilldir-harnesses-');
+    tempDirs.push(root);
+
+    const projectSkills = path.join(root, 'project', '.agents', 'skills');
+    const codexSkills = path.join(root, 'codex-home', '.codex', 'skills');
+    const claudeSkills = path.join(root, 'claude-home', '.claude', 'skills');
+    const output = path.join(root, 'output');
+
+    const result = await runSync({
+      sources: [projectSkills, codexSkills, claudeSkills],
+      output,
+    });
+
+    expect(result.resolved.get('playwright')?.winner.dir).toBe(
+      path.join(projectSkills, 'playwright'),
+    );
+    expect(
+      result.resolved.get('playwright')?.shadowed.map((entry) => entry.dir),
+    ).toEqual([
+      path.join(codexSkills, 'playwright'),
+      path.join(claudeSkills, 'playwright'),
+    ]);
+    expect(await readSymlinkTarget(path.join(output, 'playwright'))).toBe(
+      path.join(projectSkills, 'playwright'),
+    );
+    expect(await readSymlinkTarget(path.join(output, 'codex-only'))).toBe(
+      path.join(codexSkills, 'codex-only'),
+    );
+    expect(await readSymlinkTarget(path.join(output, 'claude-only'))).toBe(
+      path.join(claudeSkills, 'claude-only'),
+    );
+    expect(await readSymlinkTarget(path.join(output, 'repo-only'))).toBe(
+      path.join(projectSkills, 'repo-only'),
+    );
   });
 });
