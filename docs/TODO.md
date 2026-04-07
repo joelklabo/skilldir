@@ -88,13 +88,13 @@ The remaining work is organized in execution order.
 - [ ] Add tests for two concurrent sync processes
 - [ ] Add tests for stale manifest entries
 - [x] Add tests for broken managed symlinks before sync
-- [ ] Add tests for unmanaged files blocking desired skill names
-- [ ] Add tests for unmanaged directories blocking desired skill names
+- [x] Add tests for unmanaged files blocking desired skill names
+- [x] Add tests for unmanaged directories blocking desired skill names
 - [x] Add tests for unmanaged symlinks blocking desired skill names
 - [x] Add tests for managed symlink retargeting after precedence changes
 - [ ] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
 - [ ] Decide whether manifest writes should be atomic temp-write + rename
-- [ ] Add cleanup behavior for temp files left behind after interrupted syncs
+- [x] Add cleanup behavior for temp files left behind after interrupted syncs
 
 ## Phase 3. Diagnostics and UX
 
@@ -119,7 +119,7 @@ The remaining work is organized in execution order.
 - [ ] Add explicit checks for source directory permission failures
 - [ ] Add explicit checks for manifest corruption
 - [x] Decide which doctor issues should produce non-zero exit codes
-- [ ] Add an explicit machine-readable code list to the docs
+- [x] Add an explicit machine-readable code list to the docs
 
 ### CLI ergonomics
 
@@ -135,10 +135,10 @@ The remaining work is organized in execution order.
 
 - [ ] Add tests for startup sync followed by change-driven sync
 - [x] Add tests for repeated burst changes across multiple paths
-- [ ] Add tests for source directory deletion and recreation
+- [x] Add tests for source directory deletion and recreation
 - [ ] Add tests for output directory deletion while watch mode is running
 - [ ] Add tests for signal handling and clean shutdown
-- [ ] Add tests for interval-driven periodic resync
+- [x] Add tests for interval-driven periodic resync
 - [ ] Add overflow/backstop behavior if the watcher misses events
 - [ ] Add log messages that distinguish filesystem-triggered syncs from periodic syncs
 - [ ] Decide whether watch mode should continue when a source disappears temporarily
@@ -146,7 +146,7 @@ The remaining work is organized in execution order.
 
 ## Phase 5. CLI Integration and End-to-End Tests
 
-- [ ] Add CLI smoke tests that invoke the built binary
+- [x] Add CLI smoke tests that invoke the built binary
 - [x] Add CLI tests for `sync --config`
 - [x] Add CLI tests for `status`
 - [x] Add CLI tests for `status --json`
@@ -155,7 +155,7 @@ The remaining work is organized in execution order.
 - [ ] Add integration tests for nested source/output combinations
 - [x] Add integration tests for broken symlinks in the output tree
 - [x] Add integration tests for unmanaged output conflicts
-- [ ] Add integration tests for precedence changes between sync runs
+- [x] Add integration tests for precedence changes between sync runs
 - [ ] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
 - [ ] Decide whether to add large-tree performance tests in CI or keep them local-only
 

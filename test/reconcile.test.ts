@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readManifest } from '../src/manifest.js';
 import { reconcileOutput } from '../src/reconcile.js';
 import { resolveSkills } from '../src/resolve.js';
 import { createSkill, makeTempDir } from './helpers.js';
@@ -149,5 +150,105 @@ describe('reconcileOutput', () => {
       },
     ]);
     expect(await fs.readlink(path.join(output, 'playwright'))).toBe(unmanaged);
+  });
+
+  it('warns when an unmanaged file blocks the desired skill name', async () => {
+    const root = await makeTempDir('skilldir-reconcile-unmanaged-file-');
+    const output = path.join(root, 'output');
+    const source = path.join(root, 'source');
+    const desired = await createSkill(source, 'playwright');
+
+    await fs.mkdir(output, { recursive: true });
+    await fs.writeFile(path.join(output, 'playwright'), 'manual\n', 'utf8');
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: desired,
+          skillFile: path.join(desired, 'SKILL.md'),
+          source,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.warnings).toEqual([
+      {
+        code: 'conflicting-unmanaged-entry',
+        skill: 'playwright',
+        path: path.join(output, 'playwright'),
+        expectedTarget: desired,
+      },
+    ]);
+    expect(await fs.readFile(path.join(output, 'playwright'), 'utf8')).toBe(
+      'manual\n',
+    );
+  });
+
+  it('warns when an unmanaged directory blocks the desired skill name', async () => {
+    const root = await makeTempDir('skilldir-reconcile-unmanaged-dir-');
+    const output = path.join(root, 'output');
+    const source = path.join(root, 'source');
+    const desired = await createSkill(source, 'playwright');
+
+    await fs.mkdir(path.join(output, 'playwright'), { recursive: true });
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: desired,
+          skillFile: path.join(desired, 'SKILL.md'),
+          source,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.warnings).toEqual([
+      {
+        code: 'conflicting-unmanaged-entry',
+        skill: 'playwright',
+        path: path.join(output, 'playwright'),
+        expectedTarget: desired,
+      },
+    ]);
+    expect((await fs.stat(path.join(output, 'playwright'))).isDirectory()).toBe(
+      true,
+    );
+  });
+
+  it('cleans stale temporary symlink artifacts before reconciling', async () => {
+    const root = await makeTempDir('skilldir-reconcile-temp-');
+    const output = path.join(root, 'output');
+    const source = path.join(root, 'source');
+    const desired = await createSkill(source, 'playwright');
+
+    await fs.mkdir(output, { recursive: true });
+    await fs.symlink(desired, path.join(output, 'playwright.tmp-stale'));
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: desired,
+          skillFile: path.join(desired, 'SKILL.md'),
+          source,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.created).toEqual(['playwright']);
+    await expect(
+      fs.lstat(path.join(output, 'playwright.tmp-stale')),
+    ).rejects.toThrow();
+    expect((await readManifest(output)).managed).toEqual({
+      playwright: desired,
+    });
   });
 });

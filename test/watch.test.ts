@@ -62,4 +62,61 @@ describe('watch', () => {
     await handle.close();
     vi.useRealTimers();
   });
+
+  it('runs periodic resyncs without filesystem events', async () => {
+    vi.useFakeTimers();
+    const sync = vi.fn(async () => {});
+    const handle = startWatch(
+      { sources: ['/tmp/source'], output: '/tmp/output' },
+      {
+        sync,
+        createWatcher: () =>
+          ({
+            on() {
+              return this;
+            },
+            close: async () => {},
+          }) as never,
+      },
+    );
+
+    await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+    expect(sync).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+    expect(sync).toHaveBeenCalledTimes(2);
+
+    await handle.close();
+    vi.useRealTimers();
+  });
+
+  it('schedules syncs for source deletion and recreation events', async () => {
+    vi.useFakeTimers();
+    const handlers = new Map<string, () => void>();
+    const sync = vi.fn(async () => {});
+    const handle = startWatch(
+      { sources: ['/tmp/source'], output: '/tmp/output' },
+      {
+        sync,
+        createWatcher: () =>
+          ({
+            on(event: string, handler: () => void) {
+              handlers.set(event, handler);
+              return this;
+            },
+            close: async () => {},
+          }) as never,
+      },
+    );
+
+    handlers.get('unlinkDir')?.();
+    await vi.advanceTimersByTimeAsync(200);
+    expect(sync).toHaveBeenCalledTimes(1);
+
+    handlers.get('addDir')?.();
+    await vi.advanceTimersByTimeAsync(200);
+    expect(sync).toHaveBeenCalledTimes(2);
+
+    await handle.close();
+    vi.useRealTimers();
+  });
 });

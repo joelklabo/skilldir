@@ -143,6 +143,13 @@ Machine-readable `doctor --json`:
 }
 ```
 
+Doctor issue codes:
+
+- `missing-source`
+- `broken-managed-symlink`
+- `unmanaged-output-entry`
+- `shadowed-skill`
+
 ## Local Development
 
 ```bash

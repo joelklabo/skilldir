@@ -29,12 +29,28 @@ async function replaceSymlink(
   await fs.rename(tempPath, linkPath);
 }
 
+async function cleanupTemporarySymlinks(output: string): Promise<void> {
+  const entries = await fs
+    .readdir(output, { withFileTypes: true })
+    .catch(() => []);
+  await Promise.all(
+    entries.map(async (entry) => {
+      if (!entry.name.includes('.tmp-')) return;
+      const entryPath = path.join(output, entry.name);
+      const stats = await fs.lstat(entryPath).catch(() => null);
+      if (!stats?.isSymbolicLink()) return;
+      await fs.unlink(entryPath).catch(() => {});
+    }),
+  );
+}
+
 export async function reconcileOutput(input: {
   output: string;
   resolved: Map<string, ResolvedSkill>;
 }): Promise<Pick<SyncResult, 'created' | 'updated' | 'removed' | 'warnings'>> {
   const output = path.resolve(input.output);
   await fs.mkdir(output, { recursive: true });
+  await cleanupTemporarySymlinks(output);
   const manifest = await readManifest(output);
   const created: string[] = [];
   const updated: string[] = [];
