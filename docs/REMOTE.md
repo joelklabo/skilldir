@@ -1,10 +1,10 @@
-# Remote Source Design
+# Remote Sources
 
-This document defines the intended remote-source model before implementation work begins.
+This document defines the current remote-source model and the remaining follow-up work.
 
 ## Product contract
 
-- Remote support does not ship in the `0.x` local-only contract. It is planned for `1.0`.
+- Remote support ships as a read-only feature in `0.x`.
 - The first remote version is read-only.
 - Remote support is opt-in per source entry.
 - Remote sources participate in the same first-source-wins ordering as local sources.
@@ -18,7 +18,7 @@ Remote and local sources share one `sources[]` array.
 - A string entry continues to mean a local source path.
 - A remote source uses an object entry.
 
-Planned shape:
+Current shape:
 
 ```json
 {
@@ -41,7 +41,7 @@ Planned shape:
 }
 ```
 
-Planned remote fields:
+Remote fields:
 
 - `type`: must be `"remote"`
 - `url`: remote API base URL
@@ -66,18 +66,18 @@ This means:
 
 - remote sources prefetch the full index metadata
 - remote sources do not fetch every archive eagerly
-- `status` should eventually show the local cache path plus remote origin metadata for remote winners
-- `doctor` should eventually report stale remote metadata separately from local-source issues
+- `status --json` shows remote winner metadata for remote winners
+- `doctor` reports missing remote auth envs and corrupt remote cache files
 
 ## Cache layout
 
-Planned cache root:
+Cache root:
 
 ```text
 ~/.local/share/skilldir/remote/
 ```
 
-Planned layout:
+Layout:
 
 ```text
 ~/.local/share/skilldir/remote/
@@ -90,7 +90,7 @@ Planned layout:
       state.json
 ```
 
-Design decisions:
+Current decisions:
 
 - extracted objects are keyed by digest
 - source-specific metadata lives under `sources/<source-hash>/`
@@ -100,7 +100,7 @@ Design decisions:
 
 ## Remote payload format
 
-The first remote version should use `.tar.gz` payloads.
+The current remote version uses `.tar.gz` payloads.
 
 Required metadata per remote skill entry:
 
@@ -119,7 +119,7 @@ Design decisions:
 
 ## Auth and trust
 
-First-version auth decisions:
+Current auth decisions:
 
 - credentials come from env vars, not inline config secrets
 - first auth mode is bearer-token-from-env
@@ -130,7 +130,7 @@ This keeps the first version small and avoids inventing a secret-storage layer i
 
 ## Failure behavior
 
-Planned behavior:
+Current behavior:
 
 - if index refresh fails but a cached index exists, continue with a warning
 - if no cached index exists and the remote source cannot be reached, surface a sync failure for that source
@@ -148,7 +148,7 @@ Remote support does not change the harness contract.
 
 ## Operational commands
 
-Planned first-version operational stance:
+Current operational stance:
 
 - no dedicated `cache prune` command until cache growth justifies it
 - no dedicated `cache warm` command in the first remote cut
@@ -157,9 +157,5 @@ Planned first-version operational stance:
 
 ## Rollout
 
-- `0.x`: local-only contract
-- `1.0` phase R1: remote materialized cache can be used as a manually populated local source
-- `1.0` phase R2: managed remote index refresh
-- `1.0` phase R3: managed archive fetch, verify, and extract
-- `1.0` phase R4: watch-mode remote refresh
+- `0.x`: read-only remote source support with index refresh, archive fetch, digest verification, and a local materialized cache
 - later: stronger trust features only if real usage justifies them

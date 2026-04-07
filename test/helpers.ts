@@ -28,7 +28,7 @@ export async function copyFixtureTree(
 
 export async function writeConfig(
   configPath: string,
-  config: { sources: string[]; output: string },
+  config: { sources: unknown[]; output: string },
 ) {
   await fs.writeFile(
     configPath,

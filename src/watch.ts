@@ -31,7 +31,11 @@ export function startWatch(config: SyncConfig, deps: WatchDependencies) {
       void deps.sync('filesystem');
     }, debounceMs);
   };
-  const watcher = createWatcher(config.sources);
+  const watcher = createWatcher(
+    config.sources.filter(
+      (source): source is string => typeof source === 'string',
+    ),
+  );
   watcher.on('add', schedule);
   watcher.on('addDir', schedule);
   watcher.on('change', schedule);

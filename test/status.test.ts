@@ -68,7 +68,9 @@ describe('status output', () => {
     expect(parsed.resolved[0]).toEqual({
       name: 'playwright',
       winner: '/a/playwright',
+      winnerRemote: null,
       shadowed: ['/b/playwright'],
+      shadowedRemote: [null],
     });
     expect(parsed.created).toEqual([]);
   });

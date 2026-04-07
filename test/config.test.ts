@@ -51,6 +51,39 @@ describe('loadConfig', () => {
     expect(config.output).toBe(path.join(os.homedir(), 'skilldir-output'));
   });
 
+  it('loads a remote source object with defaults', async () => {
+    const root = await makeTempDir('skilldir-config-remote-');
+    const configPath = path.join(root, 'skilldir.json');
+    await fs.writeFile(
+      configPath,
+      JSON.stringify({
+        sources: [
+          '../local-source',
+          {
+            type: 'remote',
+            url: 'http://127.0.0.1:4323/v1',
+          },
+        ],
+        output: './out',
+      }),
+      'utf8',
+    );
+
+    const config = await loadConfig(configPath);
+
+    expect(config.sources).toEqual([
+      path.join(root, '..', 'local-source'),
+      {
+        type: 'remote',
+        url: 'http://127.0.0.1:4323/v1',
+        auth: { type: 'none' },
+        refreshTtlSeconds: 300,
+        requestTimeoutSeconds: 10,
+        integrity: 'required',
+      },
+    ]);
+  });
+
   it('wraps parse errors with the config path', async () => {
     const root = await makeTempDir('skilldir-config-parse-');
     const configPath = path.join(root, 'skilldir.json');
@@ -80,6 +113,47 @@ describe('loadConfig', () => {
 
     await expect(loadConfig(configPath)).rejects.toThrow(
       `Config ${configPath} field "output" must be a non-empty string.`,
+    );
+  });
+
+  it('rejects malformed remote source entries', async () => {
+    const root = await makeTempDir('skilldir-config-remote-invalid-');
+    const configPath = path.join(root, 'skilldir.json');
+    await fs.writeFile(
+      configPath,
+      JSON.stringify({
+        sources: [
+          {
+            type: 'remote',
+            url: '',
+          },
+        ],
+        output: './out',
+      }),
+      'utf8',
+    );
+
+    await expect(loadConfig(configPath)).rejects.toThrow(
+      `Config ${configPath} remote source at index 0 field "url" must be a non-empty string.`,
+    );
+
+    await fs.writeFile(
+      configPath,
+      JSON.stringify({
+        sources: [
+          {
+            type: 'remote',
+            url: 'http://127.0.0.1:4323/v1',
+            auth: { type: 'bearer-env' },
+          },
+        ],
+        output: './out',
+      }),
+      'utf8',
+    );
+
+    await expect(loadConfig(configPath)).rejects.toThrow(
+      'field "auth" must be { "type": "none" } or { "type": "bearer-env", "env": "NAME" }',
     );
   });
 });

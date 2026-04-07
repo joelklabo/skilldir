@@ -4,7 +4,7 @@
 
 ## Core model
 
-- `sources[]`: ordered input directories
+- `sources[]`: ordered input directories or remote source objects
 - `output`: managed symlink directory
 - skill identity: folder basename containing `SKILL.md`
 - precedence: first source in the array wins
@@ -74,13 +74,12 @@ ordered sources
 
 ## Deferred By Design
 
-- remote registries and fetched cache roots
 - frontmatter-derived naming
 - wrapper-based harness integration
 - virtual filesystems or FUSE
 - automatic movement or adoption of unmanaged output entries
 
-See [docs/REMOTE.md](./docs/REMOTE.md) for the planned `1.0` remote-source model.
+See [docs/REMOTE.md](./docs/REMOTE.md) for the current remote-source model.
 
 ## Non-goals in the MVP
 

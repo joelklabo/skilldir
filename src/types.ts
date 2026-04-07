@@ -1,9 +1,39 @@
+export type RemoteAuthConfig =
+  | {
+      type: 'none';
+    }
+  | {
+      type: 'bearer-env';
+      env: string;
+    };
+
+export type RemoteSourceConfig = {
+  type: 'remote';
+  url: string;
+  auth: RemoteAuthConfig;
+  refreshTtlSeconds: number;
+  requestTimeoutSeconds: number;
+  integrity: 'required';
+  label?: string;
+  description?: string;
+};
+
+export type SourceConfig = string | RemoteSourceConfig;
+
+export type RemoteSkillMetadata = {
+  sourceUrl: string;
+  version: string;
+  digest: string;
+  archiveUrl: string;
+};
+
 export type SkillDirEntry = {
   name: string;
   dir: string;
   skillFile: string;
   source: string;
   sourceIndex: number;
+  remote?: RemoteSkillMetadata;
 };
 
 export type ResolvedSkill = {
@@ -12,7 +42,7 @@ export type ResolvedSkill = {
 };
 
 export type SyncConfig = {
-  sources: string[];
+  sources: SourceConfig[];
   output: string;
 };
 
@@ -53,6 +83,11 @@ export type SyncWarning =
   | {
       code: 'source-missing';
       source: string;
+    }
+  | {
+      code: 'remote-warning';
+      source: string;
+      message: string;
     };
 
 export type SyncResult = {
@@ -98,4 +133,13 @@ export type DoctorIssue =
       skill: string;
       winner: string;
       shadowed: string;
+    }
+  | {
+      code: 'remote-auth-missing';
+      source: string;
+      env: string;
+    }
+  | {
+      code: 'remote-cache-corrupt';
+      path: string;
     };

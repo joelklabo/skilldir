@@ -4,7 +4,7 @@
 [![Release](https://github.com/joelklabo/skilldir/actions/workflows/release.yml/badge.svg)](https://github.com/joelklabo/skilldir/actions/workflows/release.yml)
 [![Pages](https://img.shields.io/badge/pages-live-166534)](https://joelklabo.github.io/skilldir/)
 
-`skilldir` builds a normal directory of symlinks from an ordered list of skill sources.
+`skilldir` builds a normal directory of symlinks from an ordered list of local and remote skill sources.
 
 The MVP rule is intentionally small:
 
@@ -25,6 +25,7 @@ The MVP rule is intentionally small:
 - duplicate skill names within one source are warnings, not hard errors, in `0.x`
 - `sync` prints the full status view by default in `0.x`
 - `doctor` prints `doctor: ok` on success in `0.x`
+- read-only remote source entries are supported in `0.x`
 - watch mode continues running if a source disappears temporarily
 - watch mode always does a startup sync, then reacts to filesystem changes, then performs periodic interval resyncs as a backstop
 - status output does not show source index numbers or source labels in `0.x`
@@ -70,6 +71,28 @@ The MVP config format is JSON for simplicity.
     "/home/honk/code/project/.agents/skills",
     "/home/honk/.codex/skills",
     "/home/honk/.claude/skills"
+  ],
+  "output": "/home/honk/.agents/skills"
+}
+```
+
+Remote sources are also supported:
+
+```json
+{
+  "sources": [
+    "/home/honk/code/project/.agents/skills",
+    {
+      "type": "remote",
+      "url": "http://127.0.0.1:4323/v1",
+      "auth": {
+        "type": "bearer-env",
+        "env": "SKILLDIR_TOKEN"
+      },
+      "refreshTtlSeconds": 300,
+      "requestTimeoutSeconds": 10,
+      "integrity": "required"
+    }
   ],
   "output": "/home/honk/.agents/skills"
 }
@@ -156,7 +179,9 @@ Machine-readable `status --json`:
     {
       "name": "playwright",
       "winner": "/home/honk/code/project/.agents/skills/playwright",
-      "shadowed": ["/home/honk/.codex/skills/playwright"]
+      "winnerRemote": null,
+      "shadowed": ["/home/honk/.codex/skills/playwright"],
+      "shadowedRemote": [null]
     }
   ],
   "warnings": [],
@@ -200,6 +225,8 @@ Doctor issue codes:
 - `broken-managed-symlink`
 - `unmanaged-output-entry`
 - `shadowed-skill`
+- `remote-auth-missing`
+- `remote-cache-corrupt`
 
 ## Local Development
 

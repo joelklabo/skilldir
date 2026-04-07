@@ -18,13 +18,17 @@ export function renderStatus(result: SyncResult): string {
   if (names.length > 0) lines.push('');
   for (const name of names) {
     const entry = result.resolved.get(name)!;
-    lines.push(`${name} -> ${entry.winner.dir}`);
+    lines.push(
+      `${name} -> ${entry.winner.dir}${entry.winner.remote ? ` (remote ${entry.winner.remote.sourceUrl} @ ${entry.winner.remote.version})` : ''}`,
+    );
     if (entry.shadowed.length > 0) {
       lines.push('  shadowed:');
       for (const shadowed of [...entry.shadowed].sort((left, right) =>
         left.dir.localeCompare(right.dir, 'en'),
       )) {
-        lines.push(`  - ${shadowed.dir}`);
+        lines.push(
+          `  - ${shadowed.dir}${shadowed.remote ? ` (remote ${shadowed.remote.sourceUrl} @ ${shadowed.remote.version})` : ''}`,
+        );
       }
     }
   }
@@ -34,6 +38,10 @@ export function renderStatus(result: SyncResult): string {
     for (const warning of result.warnings) {
       if (warning.code === 'source-missing') {
         lines.push(`- missing source: ${warning.source}`);
+      } else if (warning.code === 'remote-warning') {
+        lines.push(
+          `- remote warning for ${warning.source}: ${warning.message}`,
+        );
       } else {
         lines.push(
           `- unmanaged conflict for ${warning.skill}: ${warning.path}`,
@@ -63,9 +71,28 @@ export function renderStatusJson(result: SyncResult): string {
         .map(([name, entry]) => ({
           name,
           winner: entry.winner.dir,
+          winnerRemote:
+            entry.winner.remote === undefined
+              ? null
+              : {
+                  sourceUrl: entry.winner.remote.sourceUrl,
+                  version: entry.winner.remote.version,
+                  digest: entry.winner.remote.digest,
+                },
           shadowed: [...entry.shadowed]
             .sort((left, right) => left.dir.localeCompare(right.dir, 'en'))
             .map((candidate) => candidate.dir),
+          shadowedRemote: [...entry.shadowed]
+            .sort((left, right) => left.dir.localeCompare(right.dir, 'en'))
+            .map((candidate) =>
+              candidate.remote === undefined
+                ? null
+                : {
+                    sourceUrl: candidate.remote.sourceUrl,
+                    version: candidate.remote.version,
+                    digest: candidate.remote.digest,
+                  },
+            ),
         })),
       warnings: result.warnings,
       created: result.created,

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
 import path from 'node:path';
 import { readManifest } from './manifest.js';
+import { runRemoteDoctor } from './remote.js';
 import { SyncResult, DoctorIssue, SyncConfig } from './types.js';
 
 async function exists(filePath: string): Promise<boolean> {
@@ -49,6 +50,7 @@ export async function runDoctor(
 ): Promise<DoctorIssue[]> {
   const issues: DoctorIssue[] = [];
   for (const source of config.sources) {
+    if (typeof source !== 'string') continue;
     if (!(await exists(source))) {
       issues.push({ code: 'missing-source', source });
       continue;
@@ -69,6 +71,14 @@ export async function runDoctor(
       path: path.join(config.output, '.skilldir-manifest.json'),
     });
   }
+  issues.push(
+    ...(await runRemoteDoctor(
+      config.sources.filter(
+        (source): source is Exclude<typeof source, string> =>
+          typeof source !== 'string',
+      ),
+    )),
+  );
   for (const [skill, entry] of result.resolved) {
     for (const shadowed of entry.shadowed) {
       issues.push({
@@ -133,6 +143,10 @@ export function renderDoctor(issues: DoctorIssue[]): string {
           return `unmanaged output entry: ${issue.path}`;
         case 'shadowed-skill':
           return `shadowed skill: ${issue.skill} winner=${issue.winner} shadowed=${issue.shadowed}`;
+        case 'remote-auth-missing':
+          return `remote auth missing: ${issue.source} env=${issue.env}`;
+        case 'remote-cache-corrupt':
+          return `remote cache corrupt: ${issue.path}`;
       }
     }),
   ].join('\n');

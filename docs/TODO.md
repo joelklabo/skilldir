@@ -204,7 +204,8 @@ The remaining work is organized in execution order.
   - Verified on 2026-04-07: the workflow branch `changeset-release/main` exists, but no PR is opened because GitHub Actions is not currently permitted by repo settings to create the version PR.
 - [x] Decide whether release PRs should be auto-merged or manually reviewed
 - [x] Decide whether npm publishing is part of the next milestone or deferred
-- [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
+- [x] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
+  - Not applicable while npm publishing remains deferred.
 - [x] If npm publishing is deferred, make that explicit in docs and workflow comments
 - [x] Add a release checklist for the first public package release
 - [ ] Confirm release notes render correctly in GitHub Releases
@@ -223,7 +224,8 @@ The remaining work is organized in execution order.
 - [x] Add branch protection recommendations to docs
 - [x] Decide whether `main` requires green CI before merge
 - [x] Decide whether release PRs require one reviewer or can be self-merged
-- [ ] Add issue labels if support volume grows
+- [x] Add issue labels if support volume grows
+  - Not needed yet; defer until support volume exists.
 - [x] Add a lightweight support triage guide
 
 ## Phase 8. Compatibility Follow-Through
@@ -259,7 +261,7 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Add fields for trust/integrity policy
 - [x] Add fields for per-source label and description
 - [x] Add docs examples for a mixed local + remote config
-- [ ] Add config validation tests for malformed remote entries
+- [x] Add config validation tests for malformed remote entries
 
 ### 9.3. Local materialized cache design
 
@@ -269,8 +271,8 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Decide where the remote-source manifest or index lives
 - [x] Decide how cache garbage collection works
 - [x] Decide whether cache entries are shared across multiple configs on one machine
-- [ ] Add tests for cache reuse between sync runs
-- [ ] Add tests for stale cache cleanup
+- [x] Add tests for cache reuse between sync runs
+- [x] Add tests for stale cache cleanup
 
 ### 9.4. Resolve and fetch flow
 
@@ -291,10 +293,10 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Decide whether the remote source returns a digest before download
 - [x] Decide whether the local client verifies the digest after download
 - [x] Decide whether extraction happens into a temp directory before rename
-- [ ] Add tests for corrupt archives
-- [ ] Add tests for partial downloads
-- [ ] Add tests for interrupted extraction
-- [ ] Add tests for path traversal attacks in archives
+- [x] Add tests for corrupt archives
+- [x] Add tests for partial downloads
+- [x] Add tests for interrupted extraction
+- [x] Add tests for path traversal attacks in archives
 
 ### 9.6. Trust and integrity
 
@@ -305,9 +307,9 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Decide whether credentials are taken from env vars, config, keychain, or external helpers
 - [x] Add explicit docs on what is and is not trusted
 - [x] Add redaction rules for logs and error output
-- [ ] Add tests for missing credentials
-- [ ] Add tests for invalid credentials
-- [ ] Add tests for digest mismatch
+- [x] Add tests for missing credentials
+- [x] Add tests for invalid credentials
+- [x] Add tests for digest mismatch
 
 ### 9.7. Failure modes and fallback behavior
 
@@ -315,11 +317,11 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Decide what happens if the remote index can be read but a specific skill fetch fails
 - [x] Decide whether stale cached content may continue to satisfy the source
 - [x] Decide whether remote failures are warnings or hard sync failures
-- [ ] Add tests for network timeout
-- [ ] Add tests for 404 skill-not-found
-- [ ] Add tests for 401/403 auth failures
-- [ ] Add tests for malformed server responses
-- [ ] Add tests for stale cache fallback behavior
+- [x] Add tests for network timeout
+- [x] Add tests for 404 skill-not-found
+- [x] Add tests for 401/403 auth failures
+- [x] Add tests for malformed server responses
+- [x] Add tests for stale cache fallback behavior
 
 ### 9.8. Compatibility model
 
@@ -327,13 +329,13 @@ This phase intentionally treats remote support as “another source” rather th
 - [x] Ensure the output directory remains just symlinks to local materialized directories
 - [x] Ensure no harness-specific runtime plugin is required
 - [x] Add docs that explain remote support does not change the harness contract
-- [ ] Add integration tests mixing local and remote candidates for the same skill key
-- [ ] Add integration tests showing remote source order relative to local sources
+- [x] Add integration tests mixing local and remote candidates for the same skill key
+- [x] Add integration tests showing remote source order relative to local sources
 
 ### 9.9. Operational tooling
 
-- [ ] Add `doctor` checks for remote cache health
-- [ ] Add `doctor` checks for remote auth state if feasible
+- [x] Add `doctor` checks for remote cache health
+- [x] Add `doctor` checks for remote auth state if feasible
 - [x] Decide whether a dedicated `cache prune` command is needed
 - [x] Decide whether a dedicated `cache warm` command is needed
 - [x] Decide whether remote source refresh belongs in `watch` or a separate command
