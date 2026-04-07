@@ -39,6 +39,13 @@ function ensureBuilt(cwd: string) {
 }
 
 describe('cli', () => {
+  it('renders the package version', () => {
+    const repoRoot = path.resolve(__dirname, '..');
+    const result = runCli(['--version'], repoRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout.trim()).toBe('0.2.0');
+  });
+
   it('renders top-level help with examples', () => {
     const repoRoot = path.resolve(__dirname, '..');
     const result = runCli(['--help'], repoRoot);
@@ -138,6 +145,23 @@ describe('cli', () => {
     expect(
       parsed.issues.some((issue) => issue.code === 'unmanaged-output-entry'),
     ).toBe(true);
+  });
+
+  it('exits zero when doctor only finds shadowed skills', async () => {
+    const repoRoot = path.resolve(__dirname, '..');
+    const root = await makeTempDir('skilldir-cli-doctor-shadowed-');
+    const sourceA = path.join(root, 'source-a');
+    const sourceB = path.join(root, 'source-b');
+    const output = path.join(root, 'output');
+    const configPath = path.join(root, 'config.json');
+
+    await createSkill(sourceA, 'playwright');
+    await createSkill(sourceB, 'playwright');
+    await writeConfig(configPath, { sources: [sourceA, sourceB], output });
+
+    const result = runCli(['doctor', '--config', configPath], repoRoot);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('shadowed skill: playwright');
   });
 
   it('exits non-zero for missing config files', () => {

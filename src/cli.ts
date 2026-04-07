@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import packageJson from '../package.json' with { type: 'json' };
 import { loadConfig } from './config.js';
 import { renderDoctor, renderDoctorJson, runDoctor } from './doctor.js';
 import { renderStatus, renderStatusJson } from './status.js';
@@ -18,7 +19,7 @@ const program = new Command();
 program
   .name('skilldir')
   .description('Materialize a first-source-wins union of skill directories.')
-  .version('0.1.0')
+  .version(packageJson.version)
   .addHelpText(
     'after',
     `
@@ -101,7 +102,7 @@ Examples:
     process.stdout.write(
       `${options.json ? renderDoctorJson(issues) : renderDoctor(issues)}\n`,
     );
-    if (issues.length > 0) {
+    if (issues.some((issue) => issue.code !== 'shadowed-skill')) {
       process.exitCode = 1;
     }
   });
