@@ -1,6 +1,6 @@
 {
   "name": "skilldir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Materialize a first-source-wins union of AI skill directories as an ordinary symlink folder.",
   "license": "MIT",
   "type": "module",
