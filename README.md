@@ -17,6 +17,7 @@ The MVP rule is intentionally small:
 - `status --json` and `doctor --json` use schema version `1` in `0.x`
 - symlinked source roots and symlinked skill directories are discovered normally
 - hidden directories other than `.git` are scanned in `0.x`
+- discovery is recursive without a depth limit in `0.x`
 - source labels are not part of the public config contract in `0.x`
 - env var interpolation is not supported in `0.x`
 - Windows support is best-effort only in `0.x`
@@ -25,6 +26,11 @@ The MVP rule is intentionally small:
 - `sync` prints the full status view by default in `0.x`
 - `doctor` prints `doctor: ok` on success in `0.x`
 - watch mode continues running if a source disappears temporarily
+- status output does not show source index numbers or source labels in `0.x`
+- empty sources are not shown in status output
+- shadowed candidates are always shown when present in `0.x`
+- ANSI color is intentionally not used in `0.x`
+- the sync lock lives in the output directory in `0.x`
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
@@ -226,6 +232,7 @@ Current release policy for `0.x`:
 
 - release PRs should be reviewed manually
 - npm publishing remains deferred
+- coverage upload and build artifacts are intentionally deferred unless CI debugging requires them
 
 ## CLI Help
 

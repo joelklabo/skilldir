@@ -56,19 +56,19 @@ The remaining work is organized in execution order.
 - [x] Add explicit tests for path normalization
 - [x] Decide whether env var interpolation is supported
 - [x] If env var interpolation is supported, define exact syntax and escaping behavior
-- [ ] Add config fixtures covering valid and invalid cases
+- [x] Add config fixtures covering valid and invalid cases
 
 ### Discovery
 
 - [x] Add explicit tests for symlinked source roots
 - [x] Add explicit tests for symlinked skill directories inside a source
-- [ ] Add explicit tests for unreadable directories
-- [ ] Add explicit tests for nested output directories beneath a source
-- [ ] Add explicit tests for very deep directory trees
+- [x] Add explicit tests for unreadable directories
+- [x] Add explicit tests for nested output directories beneath a source
+- [x] Add explicit tests for very deep directory trees
 - [x] Add explicit tests for skills with spaces and punctuation in folder names
-- [ ] Add explicit tests for case-sensitive and case-insensitive collisions where possible
-- [ ] Decide whether recursive scanning should be depth-limited
-- [ ] Decide whether directories beginning with `.` should be skipped by default
+- [x] Add explicit tests for case-sensitive and case-insensitive collisions where possible
+- [x] Decide whether recursive scanning should be depth-limited
+- [x] Decide whether directories beginning with `.` should be skipped by default
 - [ ] Add source-scan timing instrumentation if large trees become a problem
 
 ### Resolution
@@ -78,13 +78,13 @@ The remaining work is organized in execution order.
 - [x] Add tests for three or more colliding sources for one skill
 - [x] Add tests for multiple unique skills across many sources
 - [x] Add a human-readable explanation of the precedence rule to `status`
-- [ ] Decide whether `status` should optionally show source index numbers
-- [ ] Decide whether `status` should optionally show source labels
+- [x] Decide whether `status` should optionally show source index numbers
+- [x] Decide whether `status` should optionally show source labels
 
 ### Reconciliation
 
 - [x] Add an explicit lock for concurrent `sync` runs
-- [ ] Decide whether the lock lives in the output directory or app-state directory
+- [x] Decide whether the lock lives in the output directory or app-state directory
 - [ ] Add tests for two concurrent sync processes
 - [ ] Add tests for stale manifest entries
 - [x] Add tests for broken managed symlinks before sync
@@ -105,9 +105,9 @@ The remaining work is organized in execution order.
 - [x] Define a stable JSON schema for `status --json`
 - [x] Add snapshot tests for human-readable status output
 - [x] Add snapshot tests for JSON status output
-- [ ] Decide whether empty sources are shown in `status`
-- [ ] Decide whether shadowed candidates should be hidden behind a flag in compact mode
-- [ ] Decide whether ANSI color is worth adding in `0.x`
+- [x] Decide whether empty sources are shown in `status`
+- [x] Decide whether shadowed candidates should be hidden behind a flag in compact mode
+- [x] Decide whether ANSI color is worth adding in `0.x`
 
 ### Doctor output
 
@@ -194,8 +194,8 @@ The remaining work is organized in execution order.
 - [x] Confirm the CI workflow runs on PRs and on `main`
 - [x] Confirm CI uses `pnpm install --frozen-lockfile`
 - [x] Decide whether CI should also run `format:check`
-- [ ] Decide whether coverage should be uploaded somewhere
-- [ ] Add artifact upload for built output if that becomes useful
+- [x] Decide whether coverage should be uploaded somewhere
+- [x] Add artifact upload for built output if that becomes useful
 - [x] Add a badge to the README once the workflow name is stable
 
 ### Release workflow
@@ -214,7 +214,7 @@ The remaining work is organized in execution order.
 - [x] Confirm Pages is enabled in repo settings
 - [x] Confirm the Pages workflow deploys on `main`
 - [x] Confirm the custom site path matches the repo name
-- [ ] Add a simple diagram or animation only if it improves understanding
+- [x] Add a simple diagram or animation only if it improves understanding
 - [x] Keep the site static until product messaging stabilizes
 
 ### Governance and maintenance

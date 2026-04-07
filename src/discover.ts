@@ -55,7 +55,10 @@ async function walkDirectory(
     return;
   }
 
-  const children = await fs.readdir(root, { withFileTypes: true });
+  const children = await fs
+    .readdir(root, { withFileTypes: true })
+    .catch(() => null);
+  if (!children) return;
   await Promise.all(
     children.map(async (child) => {
       if (DEFAULT_IGNORED_NAMES.has(child.name)) return;

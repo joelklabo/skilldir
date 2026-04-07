@@ -75,4 +75,57 @@ describe('discoverSkills', () => {
 
     expect(entries.map((entry) => entry.name)).toEqual(['playwright tools!']);
   });
+
+  it('skips unreadable directories instead of failing the scan', async () => {
+    const root = await makeTempDir('skilldir-discover-unreadable-');
+    const source = path.join(root, 'source');
+    const unreadable = path.join(source, 'private');
+    const output = path.join(root, 'output');
+    await createSkill(source, 'good-one');
+    await createSkill(unreadable, 'bad-one');
+
+    await fs.chmod(unreadable, 0o000);
+    try {
+      const entries = await discoverSkills({ sources: [source], output });
+      expect(entries.map((entry) => entry.name)).toEqual(['good-one']);
+    } finally {
+      await fs.chmod(unreadable, 0o755);
+    }
+  });
+
+  it('scans deeply nested skill trees without a depth limit', async () => {
+    const root = await makeTempDir('skilldir-discover-deep-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    const deepRoot = path.join(source, 'a', 'b', 'c', 'd', 'e', 'f');
+    await createSkill(deepRoot, 'deep-skill');
+
+    const entries = await discoverSkills({ sources: [source], output });
+
+    expect(entries.map((entry) => entry.name)).toEqual(['deep-skill']);
+  });
+
+  it('scans hidden directories other than .git', async () => {
+    const root = await makeTempDir('skilldir-discover-hidden-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    await createSkill(path.join(source, '.hidden'), 'secret-skill');
+
+    const entries = await discoverSkills({ sources: [source], output });
+
+    expect(entries.map((entry) => entry.name)).toEqual(['secret-skill']);
+  });
+
+  it('keeps distinct case-sensitive skill names when the filesystem allows them', async () => {
+    const root = await makeTempDir('skilldir-discover-case-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    await createSkill(source, 'Playwright');
+    await createSkill(source, 'playwright');
+
+    const entries = await discoverSkills({ sources: [source], output });
+    const names = entries.map((entry) => entry.name).sort();
+
+    expect(names).toEqual(['Playwright', 'playwright']);
+  });
 });

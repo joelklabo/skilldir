@@ -68,6 +68,7 @@ Current maintainer policy:
 - keep `main` gated on green CI
 - review release PRs manually
 - keep npm publishing deferred until the package contract is considered stable
+- do not add CI coverage uploads or build artifacts unless they solve a concrete debugging problem
 
 ## Support Triage
 

@@ -1,9 +1,13 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { loadConfig } from '../src/config.js';
 import { makeTempDir } from './helpers.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fixturesRoot = path.join(__dirname, 'fixtures', 'configs');
 
 describe('loadConfig', () => {
   it('resolves relative paths from the config file directory', async () => {
@@ -54,6 +58,28 @@ describe('loadConfig', () => {
 
     await expect(loadConfig(configPath)).rejects.toThrow(
       `Could not parse config ${configPath}:`,
+    );
+  });
+
+  it('loads a valid fixture config', async () => {
+    const configPath = path.join(fixturesRoot, 'valid-relative.json');
+
+    const config = await loadConfig(configPath);
+
+    expect(config.sources).toEqual([
+      path.join(__dirname, 'fixtures', 'example', 'source-a'),
+      path.join(__dirname, 'fixtures', 'example', 'source-b'),
+    ]);
+    expect(config.output).toBe(
+      path.join(__dirname, 'fixtures', 'generated', 'output'),
+    );
+  });
+
+  it('rejects an invalid fixture config', async () => {
+    const configPath = path.join(fixturesRoot, 'invalid-missing-output.json');
+
+    await expect(loadConfig(configPath)).rejects.toThrow(
+      `Config ${configPath} field "output" must be a non-empty string.`,
     );
   });
 });

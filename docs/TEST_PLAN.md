@@ -17,6 +17,9 @@
 - ignores nested output directory when configured
 - follows symlinked source roots
 - follows symlinked skill directories
+- scans hidden directories other than `.git`
+- supports deep recursive trees
+- preserves distinct case-sensitive names where the filesystem allows them
 
 ### Resolution
 

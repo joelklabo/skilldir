@@ -1,0 +1,4 @@
+{
+  "sources": ["../example/source-a", "../example/source-b"],
+  "output": "../generated/output"
+}

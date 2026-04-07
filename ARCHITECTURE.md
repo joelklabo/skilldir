@@ -11,11 +11,13 @@
 - config: versionless JSON for the `0.x` line
 - machine-readable output: `status --json` and `doctor --json` with schema version `1`
 - discovery follows symlinked source roots and symlinked skill directories
+- discovery is recursive without a depth limit in `0.x`
 - env var interpolation is intentionally unsupported in `0.x`
 - Windows behavior is best-effort in `0.x`
 - one output directory per config is the supported model in `0.x`
 - duplicate skill names within one source are tolerated as warnings in `0.x`
 - watch mode is expected to continue when a source disappears temporarily
+- the output directory owns the sync lock in `0.x`
 
 ## Core flow
 
