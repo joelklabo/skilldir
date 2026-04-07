@@ -123,8 +123,8 @@ The remaining work is organized in execution order.
 
 ### CLI ergonomics
 
-- [ ] Add top-level `--help` examples
-- [ ] Add per-command examples
+- [x] Add top-level `--help` examples
+- [x] Add per-command examples
 - [x] Add a top-level `--version`
 - [ ] Add `--quiet`
 - [ ] Add `--verbose`
@@ -164,7 +164,7 @@ The remaining work is organized in execution order.
 ### README
 
 - [x] Add installation instructions for local development
-- [ ] Add installation instructions for global CLI usage
+- [x] Add installation instructions for global CLI usage
 - [x] Add a short “why not wrappers / why not FUSE” rationale
 - [x] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
 - [x] Add sample `status` and `doctor` output
@@ -182,10 +182,10 @@ The remaining work is organized in execution order.
 
 ### Contributor docs
 
-- [ ] Document local release flow with Changesets
-- [ ] Document how to add a new test fixture
-- [ ] Document how to validate Pages locally
-- [ ] Document branch/commit hygiene expectations
+- [x] Document local release flow with Changesets
+- [x] Document how to add a new test fixture
+- [x] Document how to validate Pages locally
+- [x] Document branch/commit hygiene expectations
 
 ## Phase 7. CI, Release, and Operations
 

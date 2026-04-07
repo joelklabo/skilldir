@@ -147,6 +147,34 @@ pnpm install
 pnpm check
 ```
 
+## Global CLI Usage
+
+Run from the repo without publishing:
+
+```bash
+pnpm build
+pnpm link --global
+skilldir --help
+```
+
+Or install from a packed tarball:
+
+```bash
+pnpm build
+pnpm pack
+pnpm add --global ./skilldir-0.1.0.tgz
+skilldir status --help
+```
+
+## CLI Help
+
+```bash
+skilldir --help
+skilldir status --help
+skilldir doctor --help
+skilldir watch --help
+```
+
 ## Troubleshooting
 
 - If `sync` reports that the output is already locked, another `sync` or `watch` process is still holding the output lock file.

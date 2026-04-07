@@ -15,11 +15,29 @@ const program = new Command();
 program
   .name('skilldir')
   .description('Materialize a first-source-wins union of skill directories.')
-  .version('0.1.0');
+  .version('0.1.0')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  skilldir sync --config ./skilldir.json
+  skilldir status --config ./skilldir.json --json
+  skilldir doctor --config ./skilldir.json
+  skilldir watch --config ./skilldir.json
+`,
+  );
 
 program
   .command('sync')
   .requiredOption('--config <path>', 'Path to JSON config file')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  skilldir sync --config ./skilldir.json
+  skilldir sync --config ~/.config/skilldir/config.json
+`,
+  )
   .action(async (options: CommonOptions) => {
     const config = await loadConfig(options.config);
     const result = await runSync(config);
@@ -30,6 +48,14 @@ program
   .command('status')
   .requiredOption('--config <path>', 'Path to JSON config file')
   .option('--json', 'Render JSON output')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  skilldir status --config ./skilldir.json
+  skilldir status --config ./skilldir.json --json
+`,
+  )
   .action(async (options: CommonOptions & { json?: boolean }) => {
     const config = await loadConfig(options.config);
     const result = await runSync(config);
@@ -42,6 +68,14 @@ program
   .command('doctor')
   .requiredOption('--config <path>', 'Path to JSON config file')
   .option('--json', 'Render JSON output')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  skilldir doctor --config ./skilldir.json
+  skilldir doctor --config ./skilldir.json --json
+`,
+  )
   .action(async (options: CommonOptions & { json?: boolean }) => {
     const config = await loadConfig(options.config);
     const result = await runSync(config);
@@ -57,6 +91,13 @@ program
 program
   .command('watch')
   .requiredOption('--config <path>', 'Path to JSON config file')
+  .addHelpText(
+    'after',
+    `
+Examples:
+  skilldir watch --config ./skilldir.json
+`,
+  )
   .action(async (options: CommonOptions) => {
     const config = await loadConfig(options.config);
     const sync = async () => {

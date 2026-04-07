@@ -4,8 +4,7 @@
 
 ```bash
 pnpm install
-pnpm test
-pnpm build
+pnpm check
 ```
 
 ## Development rules
@@ -14,3 +13,36 @@ pnpm build
 - Add tests before or alongside behavior changes.
 - Prefer simple full-rescan logic over incremental state until profiling proves otherwise.
 - Treat the output directory as managed state.
+
+## Release Flow
+
+Changesets manages versioning for this repo.
+
+```bash
+pnpm changeset
+pnpm version-packages
+pnpm build
+```
+
+The GitHub release workflow currently creates and updates the release branch, but the repository still needs GitHub Actions permission to open the version PR.
+
+## Test Fixtures
+
+- Put reusable config and tree fixtures under `test/fixtures`.
+- Prefer small fixture trees that model one behavior clearly.
+- For one-off filesystem scenarios, use temp directories in the test instead of growing the fixture tree.
+
+## Validate Pages Locally
+
+The Pages site is static in `site/index.html`. Review it locally with any static file server, for example:
+
+```bash
+python3 -m http.server 8000 --directory site
+```
+
+## Branch And Commit Hygiene
+
+- Keep commits scoped to one coherent behavior or documentation slice.
+- Run `pnpm check` before pushing.
+- Do not mix unrelated backlog cleanup into the same commit just because the files are nearby.
+- Prefer direct, descriptive commit messages over catch-all “update docs” commits.
