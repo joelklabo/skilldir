@@ -68,8 +68,9 @@ export async function runDoctor(
 
 export function renderDoctor(issues: DoctorIssue[]): string {
   if (issues.length === 0) return 'doctor: ok';
-  return issues
-    .map((issue) => {
+  return [
+    `doctor: ${issues.length} issue(s)`,
+    ...issues.map((issue) => {
       switch (issue.code) {
         case 'missing-source':
           return `missing source: ${issue.source}`;
@@ -80,13 +81,14 @@ export function renderDoctor(issues: DoctorIssue[]): string {
         case 'shadowed-skill':
           return `shadowed skill: ${issue.skill} winner=${issue.winner} shadowed=${issue.shadowed}`;
       }
-    })
-    .join('\n');
+    }),
+  ].join('\n');
 }
 
 export function renderDoctorJson(issues: DoctorIssue[]): string {
   return JSON.stringify(
     {
+      schemaVersion: 1,
       issues,
       count: issues.length,
     },

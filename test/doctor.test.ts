@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { renderDoctorJson, runDoctor } from '../src/doctor.js';
+import { renderDoctor, renderDoctorJson, runDoctor } from '../src/doctor.js';
 import { runSync } from '../src/sync.js';
 import { createSkill, makeTempDir } from './helpers.js';
 
@@ -58,6 +58,53 @@ describe('doctor', () => {
       await runSync({ sources: [sourceA, sourceB], output }),
     );
 
-    expect(renderDoctorJson(issues)).toContain('"count": 2');
+    const normalized = renderDoctor(issues).replaceAll(
+      root,
+      '/tmp/skilldir-doctor-text-IGNORE',
+    );
+
+    expect(normalized).toMatchInlineSnapshot(`
+      "doctor: 2 issue(s)
+      shadowed skill: playwright winner=/tmp/skilldir-doctor-text-IGNORE/a/playwright shadowed=/tmp/skilldir-doctor-text-IGNORE/b/playwright
+      unmanaged output entry: /tmp/skilldir-doctor-text-IGNORE/out/manual"
+    `);
+  });
+
+  it('renders JSON output deterministically', async () => {
+    const root = await makeTempDir('skilldir-doctor-json-snapshot-');
+    const sourceA = path.join(root, 'a');
+    const sourceB = path.join(root, 'b');
+    const output = path.join(root, 'out');
+    await createSkill(sourceA, 'playwright');
+    await createSkill(sourceB, 'playwright');
+    await fs.mkdir(path.join(output, 'manual'), { recursive: true });
+
+    const issues = await runDoctor(
+      { sources: [sourceA, sourceB], output },
+      await runSync({ sources: [sourceA, sourceB], output }),
+    );
+
+    const normalized = renderDoctorJson(issues).replaceAll(
+      root,
+      '/tmp/skilldir-doctor-json-snapshot-IGNORE',
+    );
+    expect(normalized).toMatchInlineSnapshot(`
+      "{
+        "schemaVersion": 1,
+        "issues": [
+          {
+            "code": "shadowed-skill",
+            "skill": "playwright",
+            "winner": "/tmp/skilldir-doctor-json-snapshot-IGNORE/a/playwright",
+            "shadowed": "/tmp/skilldir-doctor-json-snapshot-IGNORE/b/playwright"
+          },
+          {
+            "code": "unmanaged-output-entry",
+            "path": "/tmp/skilldir-doctor-json-snapshot-IGNORE/out/manual"
+          }
+        ],
+        "count": 2
+      }"
+    `);
   });
 });

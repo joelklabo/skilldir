@@ -31,7 +31,9 @@ function makeResult(): SyncResult {
 describe('status output', () => {
   it('renders human output', () => {
     expect(renderStatus(makeResult())).toMatchInlineSnapshot(`
-      "playwright -> /a/playwright
+      "summary: 1 resolved, 1 shadowed, 0 warnings, 0 created, 0 updated, 0 removed
+
+      playwright -> /a/playwright
         shadowed:
         - /b/playwright"
     `);
@@ -39,12 +41,30 @@ describe('status output', () => {
 
   it('renders JSON output', () => {
     const parsed = JSON.parse(renderStatusJson(makeResult())) as {
+      schemaVersion: number;
+      summary: {
+        resolved: number;
+        shadowed: number;
+        warnings: number;
+        created: number;
+        updated: number;
+        removed: number;
+      };
       resolved: Array<{ name: string; winner: string; shadowed: string[] }>;
       warnings: Array<unknown>;
       created: string[];
       updated: string[];
       removed: string[];
     };
+    expect(parsed.schemaVersion).toBe(1);
+    expect(parsed.summary).toEqual({
+      resolved: 1,
+      shadowed: 1,
+      warnings: 0,
+      created: 0,
+      updated: 0,
+      removed: 0,
+    });
     expect(parsed.resolved[0]).toEqual({
       name: 'playwright',
       winner: '/a/playwright',
@@ -68,7 +88,9 @@ describe('status output', () => {
     });
 
     expect(text).toMatchInlineSnapshot(`
-      "playwright -> /a/playwright
+      "summary: 1 resolved, 1 shadowed, 2 warnings, 0 created, 0 updated, 0 removed
+
+      playwright -> /a/playwright
         shadowed:
         - /b/playwright
 

@@ -34,19 +34,19 @@ The remaining work is organized in execution order.
 
 - [ ] Decide whether JSON remains the only config format for the full `0.x` line
 - [ ] Decide whether `skilldir` will treat source labels as cosmetic metadata or part of the public config contract
-- [ ] Decide whether the canonical example output path in docs should be `~/.agents/skills`
-- [ ] Decide whether `status --json` and `doctor --json` are now stable API surfaces
-- [ ] Decide whether the manifest file is part of the supported public implementation contract or intentionally private
+- [x] Decide whether the canonical example output path in docs should be `~/.agents/skills`
+- [x] Decide whether `status --json` and `doctor --json` are now stable API surfaces
+- [x] Decide whether the manifest file is part of the supported public implementation contract or intentionally private
 - [ ] Decide how much Windows support is explicitly promised in `0.x`
 - [ ] Decide whether duplicate skill names within a single source are warnings or hard errors
 - [ ] Decide whether hidden directories other than `.git` are scanned by default or ignored by default
-- [ ] Write these decisions down in the README and architecture docs
+- [x] Write these decisions down in the README and architecture docs
 
 ## Phase 2. Core CLI Hardening
 
 ### Config loading
 
-- [ ] Add a config version field or explicitly document versionless config
+- [x] Add a config version field or explicitly document versionless config
 - [ ] Support `--config` consistently on every command
 - [x] Add better config-file-not-found errors
 - [x] Add better config-parse errors with filename and line/column when possible
@@ -77,7 +77,7 @@ The remaining work is organized in execution order.
 - [ ] Preserve deterministic ordering for shadowed candidates
 - [ ] Add tests for three or more colliding sources for one skill
 - [ ] Add tests for multiple unique skills across many sources
-- [ ] Add a human-readable explanation of the precedence rule to `status`
+- [x] Add a human-readable explanation of the precedence rule to `status`
 - [ ] Decide whether `status` should optionally show source index numbers
 - [ ] Decide whether `status` should optionally show source labels
 
@@ -91,7 +91,7 @@ The remaining work is organized in execution order.
 - [ ] Add tests for unmanaged files blocking desired skill names
 - [ ] Add tests for unmanaged directories blocking desired skill names
 - [x] Add tests for unmanaged symlinks blocking desired skill names
-- [ ] Add tests for managed symlink retargeting after precedence changes
+- [x] Add tests for managed symlink retargeting after precedence changes
 - [ ] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
 - [ ] Decide whether manifest writes should be atomic temp-write + rename
 - [ ] Add cleanup behavior for temp files left behind after interrupted syncs
@@ -100,11 +100,11 @@ The remaining work is organized in execution order.
 
 ### Status output
 
-- [ ] Add a compact summary line with counts
+- [x] Add a compact summary line with counts
 - [x] Add `status --json`
-- [ ] Define a stable JSON schema for `status --json`
+- [x] Define a stable JSON schema for `status --json`
 - [x] Add snapshot tests for human-readable status output
-- [ ] Add snapshot tests for JSON status output
+- [x] Add snapshot tests for JSON status output
 - [ ] Decide whether empty sources are shown in `status`
 - [ ] Decide whether shadowed candidates should be hidden behind a flag in compact mode
 - [ ] Decide whether ANSI color is worth adding in `0.x`
@@ -112,13 +112,13 @@ The remaining work is organized in execution order.
 ### Doctor output
 
 - [x] Add `doctor --json`
-- [ ] Define a stable JSON schema for `doctor --json`
-- [ ] Add snapshot tests for human-readable doctor output
-- [ ] Add snapshot tests for JSON doctor output
+- [x] Define a stable JSON schema for `doctor --json`
+- [x] Add snapshot tests for human-readable doctor output
+- [x] Add snapshot tests for JSON doctor output
 - [ ] Add explicit checks for output directory permission failures
 - [ ] Add explicit checks for source directory permission failures
 - [ ] Add explicit checks for manifest corruption
-- [ ] Decide which doctor issues should produce non-zero exit codes
+- [x] Decide which doctor issues should produce non-zero exit codes
 - [ ] Add an explicit machine-readable code list to the docs
 
 ### CLI ergonomics
@@ -163,22 +163,22 @@ The remaining work is organized in execution order.
 
 ### README
 
-- [ ] Add installation instructions for local development
+- [x] Add installation instructions for local development
 - [ ] Add installation instructions for global CLI usage
-- [ ] Add a short “why not wrappers / why not FUSE” rationale
+- [x] Add a short “why not wrappers / why not FUSE” rationale
 - [x] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
 - [x] Add sample `status` and `doctor` output
 - [x] Add troubleshooting section for unmanaged output entries
-- [ ] Add troubleshooting section for permissions and broken symlinks
+- [x] Add troubleshooting section for permissions and broken symlinks
 - [ ] Add badges for CI and release status
 
 ### Architecture docs
 
 - [ ] Add a one-page architecture diagram to the site or docs
-- [ ] Add a short “invariants” section
-- [ ] Add a “why the manifest exists” section
-- [ ] Add a “why source order beats priorities in the MVP” section
-- [ ] Add a “what is intentionally deferred” section
+- [x] Add a short “invariants” section
+- [x] Add a “why the manifest exists” section
+- [x] Add a “why source order beats priorities in the MVP” section
+- [x] Add a “what is intentionally deferred” section
 
 ### Contributor docs
 

@@ -39,4 +39,33 @@ describe('runSync', () => {
       path.join(sourceB, 'pdf'),
     );
   });
+
+  it('retargets winners when source order changes between sync runs', async () => {
+    const root = await makeTempDir('skilldir-sync-precedence-');
+    tempDirs.push(root);
+    const sourceA = path.join(root, 'source-a');
+    const sourceB = path.join(root, 'source-b');
+    const output = path.join(root, 'output');
+    const playwrightA = await createSkill(sourceA, 'playwright');
+    const playwrightB = await createSkill(sourceB, 'playwright');
+
+    const first = await runSync({
+      sources: [sourceA, sourceB],
+      output,
+    });
+    expect(first.created).toEqual(['playwright']);
+    expect(await readSymlinkTarget(path.join(output, 'playwright'))).toBe(
+      playwrightA,
+    );
+
+    const second = await runSync({
+      sources: [sourceB, sourceA],
+      output,
+    });
+    expect(second.updated).toEqual(['playwright']);
+    expect(await readSymlinkTarget(path.join(output, 'playwright'))).toBe(
+      playwrightB,
+    );
+    expect(second.resolved.get('playwright')?.winner.dir).toBe(playwrightB);
+  });
 });
