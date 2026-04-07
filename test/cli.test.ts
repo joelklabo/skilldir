@@ -110,6 +110,7 @@ describe('cli', () => {
     );
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('sync: trigger=manual');
+    expect(result.stdout).toContain('sync: discovery ');
     expect(result.stdout).toContain('summary: 1 resolved');
   });
 

@@ -70,6 +70,23 @@ describe('runWatchCommand', () => {
             updated: [],
             removed: [],
             warnings: [],
+            metrics: {
+              discovery: {
+                durationMs: 12.5,
+                perSource: [
+                  {
+                    source: '/tmp/source-a',
+                    durationMs: 4.1,
+                    discovered: 1,
+                  },
+                  {
+                    source: '/tmp/source-b',
+                    durationMs: 8.4,
+                    discovered: 0,
+                  },
+                ],
+              },
+            },
           }),
         renderStatusFn: () => 'status output',
         writeLine: (line) => lines.push(line),
@@ -87,8 +104,11 @@ describe('runWatchCommand', () => {
 
     expect(lines).toEqual([
       'watch: sync trigger=startup',
+      'watch: discovery 12.5ms total across 2 source(s)',
       'watch: sync trigger=filesystem',
+      'watch: discovery 12.5ms total across 2 source(s)',
       'watch: sync trigger=interval',
+      'watch: discovery 12.5ms total across 2 source(s)',
     ]);
   });
 
@@ -108,6 +128,12 @@ describe('runWatchCommand', () => {
             updated: [],
             removed: [],
             warnings: [],
+            metrics: {
+              discovery: {
+                durationMs: 1,
+                perSource: [],
+              },
+            },
           }),
         renderStatusFn: () => 'status output',
         writeLine: () => {},

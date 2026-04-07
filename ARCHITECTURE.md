@@ -21,6 +21,7 @@
 - the output directory owns the sync lock in `0.x`
 - manifest writes use temp-write + rename replacement semantics in `0.x`
 - stronger non-Unix symlink atomicity is intentionally best-effort in `0.x`
+- verbose `sync` and `watch` output can report discovery timings in `0.x`
 
 ## Core flow
 
@@ -78,6 +79,8 @@ ordered sources
 - wrapper-based harness integration
 - virtual filesystems or FUSE
 - automatic movement or adoption of unmanaged output entries
+
+See [docs/REMOTE.md](./docs/REMOTE.md) for the planned `1.0` remote-source model.
 
 ## Non-goals in the MVP
 

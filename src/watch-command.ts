@@ -43,10 +43,15 @@ export async function runWatchCommand(
     ((line: string) => signalSource.stdout.write(`${line}\n`));
 
   const syncOnce = async (trigger: WatchTrigger) => {
+    const result = await runSyncFn(config);
     if (options.verbose) {
       writeLine(`watch: sync trigger=${trigger}`);
+      if (result.metrics) {
+        writeLine(
+          `watch: discovery ${result.metrics.discovery.durationMs.toFixed(1)}ms total across ${result.metrics.discovery.perSource.length} source(s)`,
+        );
+      }
     }
-    const result = await runSyncFn(config);
     if (!options.quiet) {
       writeLine(renderStatusFn(result));
     }

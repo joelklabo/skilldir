@@ -52,6 +52,11 @@ Examples:
       );
     }
     const result = await runSync(config);
+    if (options.verbose && result.metrics) {
+      process.stdout.write(
+        `sync: discovery ${result.metrics.discovery.durationMs.toFixed(1)}ms total across ${result.metrics.discovery.perSource.length} source(s)\n`,
+      );
+    }
     if (!options.quiet) {
       process.stdout.write(`${renderStatus(result)}\n`);
     }

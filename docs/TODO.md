@@ -69,7 +69,7 @@ The remaining work is organized in execution order.
 - [x] Add explicit tests for case-sensitive and case-insensitive collisions where possible
 - [x] Decide whether recursive scanning should be depth-limited
 - [x] Decide whether directories beginning with `.` should be skipped by default
-- [ ] Add source-scan timing instrumentation if large trees become a problem
+- [x] Add source-scan timing instrumentation if large trees become a problem
 
 ### Resolution
 
@@ -201,13 +201,14 @@ The remaining work is organized in execution order.
 ### Release workflow
 
 - [ ] Confirm the Changesets workflow opens version PRs correctly
-  - Current state: the workflow pushes `changeset-release/main`, but GitHub Actions is not currently permitted by repo settings to create the version PR.
+  - Verified on 2026-04-07: the workflow branch `changeset-release/main` exists, but no PR is opened because GitHub Actions is not currently permitted by repo settings to create the version PR.
 - [x] Decide whether release PRs should be auto-merged or manually reviewed
 - [x] Decide whether npm publishing is part of the next milestone or deferred
 - [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
 - [x] If npm publishing is deferred, make that explicit in docs and workflow comments
 - [x] Add a release checklist for the first public package release
 - [ ] Confirm release notes render correctly in GitHub Releases
+  - Blocked until the first real GitHub Release exists.
 
 ### Pages
 
@@ -241,55 +242,55 @@ This phase intentionally treats remote support as “another source” rather th
 
 ### 9.1. Product contract
 
-- [ ] Decide whether remote support lands in `0.x` or waits for `1.0`
-- [ ] Decide whether remote support is read-only in the first version
-- [ ] Decide whether remote support is opt-in per source entry
-- [ ] Decide whether remote-fetched skills are addressed by skill key only or by key + version
-- [ ] Decide whether remote sources are allowed to override local sources purely by order in `sources[]`
-- [ ] Decide whether remote materialized cache paths are treated as internal implementation details
+- [x] Decide whether remote support lands in `0.x` or waits for `1.0`
+- [x] Decide whether remote support is read-only in the first version
+- [x] Decide whether remote support is opt-in per source entry
+- [x] Decide whether remote-fetched skills are addressed by skill key only or by key + version
+- [x] Decide whether remote sources are allowed to override local sources purely by order in `sources[]`
+- [x] Decide whether remote materialized cache paths are treated as internal implementation details
 
 ### 9.2. Config shape for remote sources
 
-- [ ] Define the config schema for a remote source entry
-- [ ] Decide whether local and remote sources share one union type or separate arrays
-- [ ] Add fields for remote base URL
-- [ ] Add fields for auth mode
-- [ ] Add fields for refresh interval or cache TTL
-- [ ] Add fields for trust/integrity policy
-- [ ] Add fields for per-source label and description
-- [ ] Add docs examples for a mixed local + remote config
+- [x] Define the config schema for a remote source entry
+- [x] Decide whether local and remote sources share one union type or separate arrays
+- [x] Add fields for remote base URL
+- [x] Add fields for auth mode
+- [x] Add fields for refresh interval or cache TTL
+- [x] Add fields for trust/integrity policy
+- [x] Add fields for per-source label and description
+- [x] Add docs examples for a mixed local + remote config
 - [ ] Add config validation tests for malformed remote entries
 
 ### 9.3. Local materialized cache design
 
-- [ ] Pick a cache root, for example under `~/.local/share/skilldir/`
-- [ ] Decide the object directory layout for fetched skill bundles
-- [ ] Decide whether cache objects are keyed by skill name, version, digest, or a combination
-- [ ] Decide where the remote-source manifest or index lives
-- [ ] Decide how cache garbage collection works
-- [ ] Decide whether cache entries are shared across multiple configs on one machine
+- [x] Pick a cache root, for example under `~/.local/share/skilldir/`
+- [x] Decide the object directory layout for fetched skill bundles
+- [x] Decide whether cache objects are keyed by skill name, version, digest, or a combination
+- [x] Decide where the remote-source manifest or index lives
+- [x] Decide how cache garbage collection works
+- [x] Decide whether cache entries are shared across multiple configs on one machine
 - [ ] Add tests for cache reuse between sync runs
 - [ ] Add tests for stale cache cleanup
 
 ### 9.4. Resolve and fetch flow
 
-- [ ] Define the local state machine for remote sync:
-- [ ] fetch source index or source-specific metadata
-- [ ] decide candidate skill names available from the remote source
-- [ ] resolve the winning remote skill entry for a requested key
-- [ ] fetch the content only when needed or prefetch it explicitly
-- [ ] materialize the fetched content into the cache
-- [ ] expose the cache directory as a normal local source candidate
-- [ ] Decide whether remote sources prefetch the full index or fetch per skill lazily
-- [ ] Decide whether `status` should show both cache path and remote origin
-- [ ] Decide whether `doctor` should report stale remote metadata separately from local source issues
+- [x] Define the local state machine for remote sync:
+- [x] fetch source index or source-specific metadata
+- [x] decide candidate skill names available from the remote source
+- [x] resolve the winning remote skill entry for a requested key
+- [x] fetch the content only when needed or prefetch it explicitly
+- [x] materialize the fetched content into the cache
+- [x] expose the cache directory as a normal local source candidate
+- [x] Decide whether remote sources prefetch the full index or fetch per skill lazily
+- [x] Decide whether `status` should show both cache path and remote origin
+- [x] Decide whether `doctor` should report stale remote metadata separately from local source issues
 
 ### 9.5. Archive and extraction strategy
 
-- [ ] Decide whether remote payloads are tarballs, zip files, or raw file lists
-- [ ] Decide whether the remote source returns a digest before download
-- [ ] Decide whether the local client verifies the digest after download
-- [ ] Decide whether extraction happens into a temp directory before rename
+- [x] Decide whether remote payloads are tarballs, zip files, or raw file lists
+- [x] Decide whether the remote source returns a digest before download
+- [x] Decide whether the local client verifies the digest after download
+- [x] Decide whether extraction happens into a temp directory before rename
 - [ ] Add tests for corrupt archives
 - [ ] Add tests for partial downloads
 - [ ] Add tests for interrupted extraction
@@ -297,23 +298,23 @@ This phase intentionally treats remote support as “another source” rather th
 
 ### 9.6. Trust and integrity
 
-- [ ] Decide whether digest verification is mandatory
-- [ ] Decide whether signatures are in scope for the first remote version
-- [ ] Decide whether remote sources can be marked “trusted” or “unsafe”
-- [ ] Decide how auth tokens are stored or read
-- [ ] Decide whether credentials are taken from env vars, config, keychain, or external helpers
-- [ ] Add explicit docs on what is and is not trusted
-- [ ] Add redaction rules for logs and error output
+- [x] Decide whether digest verification is mandatory
+- [x] Decide whether signatures are in scope for the first remote version
+- [x] Decide whether remote sources can be marked “trusted” or “unsafe”
+- [x] Decide how auth tokens are stored or read
+- [x] Decide whether credentials are taken from env vars, config, keychain, or external helpers
+- [x] Add explicit docs on what is and is not trusted
+- [x] Add redaction rules for logs and error output
 - [ ] Add tests for missing credentials
 - [ ] Add tests for invalid credentials
 - [ ] Add tests for digest mismatch
 
 ### 9.7. Failure modes and fallback behavior
 
-- [ ] Decide what happens if the remote source is unavailable during `sync`
-- [ ] Decide what happens if the remote index can be read but a specific skill fetch fails
-- [ ] Decide whether stale cached content may continue to satisfy the source
-- [ ] Decide whether remote failures are warnings or hard sync failures
+- [x] Decide what happens if the remote source is unavailable during `sync`
+- [x] Decide what happens if the remote index can be read but a specific skill fetch fails
+- [x] Decide whether stale cached content may continue to satisfy the source
+- [x] Decide whether remote failures are warnings or hard sync failures
 - [ ] Add tests for network timeout
 - [ ] Add tests for 404 skill-not-found
 - [ ] Add tests for 401/403 auth failures
@@ -322,10 +323,10 @@ This phase intentionally treats remote support as “another source” rather th
 
 ### 9.8. Compatibility model
 
-- [ ] Ensure remote-fetched skills still end up as ordinary local directories before reconciliation
-- [ ] Ensure the output directory remains just symlinks to local materialized directories
-- [ ] Ensure no harness-specific runtime plugin is required
-- [ ] Add docs that explain remote support does not change the harness contract
+- [x] Ensure remote-fetched skills still end up as ordinary local directories before reconciliation
+- [x] Ensure the output directory remains just symlinks to local materialized directories
+- [x] Ensure no harness-specific runtime plugin is required
+- [x] Add docs that explain remote support does not change the harness contract
 - [ ] Add integration tests mixing local and remote candidates for the same skill key
 - [ ] Add integration tests showing remote source order relative to local sources
 
@@ -333,28 +334,28 @@ This phase intentionally treats remote support as “another source” rather th
 
 - [ ] Add `doctor` checks for remote cache health
 - [ ] Add `doctor` checks for remote auth state if feasible
-- [ ] Decide whether a dedicated `cache prune` command is needed
-- [ ] Decide whether a dedicated `cache warm` command is needed
-- [ ] Decide whether remote source refresh belongs in `watch` or a separate command
-- [ ] Add logs/metrics for remote fetch counts, failures, and cache hits
+- [x] Decide whether a dedicated `cache prune` command is needed
+- [x] Decide whether a dedicated `cache warm` command is needed
+- [x] Decide whether remote source refresh belongs in `watch` or a separate command
+- [x] Add logs/metrics for remote fetch counts, failures, and cache hits
 
 ### 9.10. Phased rollout plan
 
-- [ ] Phase R1: remote materialized cache treated as a manually populated local source
-- [ ] Phase R2: `skilldir` manages remote index refresh but not lazy fetch
-- [ ] Phase R3: `skilldir` manages fetch + verification + extraction into cache
-- [ ] Phase R4: `watch` mode refreshes remote sources on interval
-- [ ] Phase R5: add stronger trust/integrity guarantees if real usage justifies them
-- [ ] Keep each phase behind clear docs and tests before moving to the next one
+- [x] Phase R1: remote materialized cache treated as a manually populated local source
+- [x] Phase R2: `skilldir` manages remote index refresh but not lazy fetch
+- [x] Phase R3: `skilldir` manages fetch + verification + extraction into cache
+- [x] Phase R4: `watch` mode refreshes remote sources on interval
+- [x] Phase R5: add stronger trust/integrity guarantees if real usage justifies them
+- [x] Keep each phase behind clear docs and tests before moving to the next one
 
 ## Phase 10. Explicitly Deferred
 
-- [ ] Per-agent policy engines
-- [ ] Wrapper-based harness startup behavior
-- [ ] Automatic movement/adoption of unmanaged output entries
-- [ ] FUSE or virtual filesystems
-- [ ] Rich frontmatter-derived skill identity
-- [ ] Multi-writer sync semantics across machines
+- [x] Per-agent policy engines
+- [x] Wrapper-based harness startup behavior
+- [x] Automatic movement/adoption of unmanaged output entries
+- [x] FUSE or virtual filesystems
+- [x] Rich frontmatter-derived skill identity
+- [x] Multi-writer sync semantics across machines
 
 ## Suggested Next Execution Slice
 

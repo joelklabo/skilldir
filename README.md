@@ -34,6 +34,7 @@ The MVP rule is intentionally small:
 - the sync lock lives in the output directory in `0.x`
 - the manifest is rewritten with temp-write + rename semantics in `0.x`
 - stronger non-Unix symlink atomicity is not promised beyond best-effort behavior in `0.x`
+- verbose `sync` and `watch` output includes discovery timing instrumentation in `0.x`
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
@@ -259,4 +260,5 @@ skilldir watch --quiet
 
 - [TODO](./docs/TODO.md)
 - [Architecture](./ARCHITECTURE.md)
+- [Remote Design](./docs/REMOTE.md)
 - [Test Plan](./docs/TEST_PLAN.md)

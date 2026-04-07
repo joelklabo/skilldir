@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { discoverSkills } from './discover.js';
+import { discoverSkillsWithMetrics } from './discover.js';
 import { acquireOutputLock } from './lock.js';
 import { reconcileOutput } from './reconcile.js';
 import { resolveSkills } from './resolve.js';
@@ -27,7 +27,8 @@ export async function runSync(config: SyncConfig): Promise<SyncResult> {
         });
       }
     }
-    const entries = await discoverSkills(config);
+    const discovery = await discoverSkillsWithMetrics(config);
+    const entries = discovery.entries;
     const resolved = resolveSkills(entries);
     const delayMs = Number(process.env.SKILLDIR_TEST_SYNC_DELAY_MS ?? 0);
     if (Number.isFinite(delayMs) && delayMs > 0) {
@@ -43,6 +44,9 @@ export async function runSync(config: SyncConfig): Promise<SyncResult> {
       updated: reconcile.updated,
       removed: reconcile.removed,
       warnings: [...warnings, ...reconcile.warnings],
+      metrics: {
+        discovery: discovery.metrics,
+      },
     };
   } finally {
     await lock.release();

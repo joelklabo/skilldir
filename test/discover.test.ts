@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { discoverSkills } from '../src/discover.js';
+import { discoverSkills, discoverSkillsWithMetrics } from '../src/discover.js';
 import { createSkill, makeTempDir } from './helpers.js';
 
 describe('discoverSkills', () => {
@@ -127,5 +127,32 @@ describe('discoverSkills', () => {
     const names = entries.map((entry) => entry.name).sort();
 
     expect(names).toEqual(['Playwright', 'playwright']);
+  });
+
+  it('reports discovery timing metrics per source', async () => {
+    const root = await makeTempDir('skilldir-discover-metrics-');
+    const sourceA = path.join(root, 'source-a');
+    const sourceB = path.join(root, 'source-b');
+    const output = path.join(root, 'output');
+    await createSkill(sourceA, 'playwright');
+    await createSkill(sourceB, 'pdf');
+
+    const result = await discoverSkillsWithMetrics({
+      sources: [sourceA, sourceB],
+      output,
+    });
+
+    expect(result.entries.map((entry) => entry.name)).toEqual([
+      'playwright',
+      'pdf',
+    ]);
+    expect(result.metrics.durationMs).toBeGreaterThanOrEqual(0);
+    expect(result.metrics.perSource).toHaveLength(2);
+    expect(result.metrics.perSource[0]?.source).toBe(sourceA);
+    expect(result.metrics.perSource[0]?.discovered).toBe(1);
+    expect(result.metrics.perSource[0]?.durationMs).toBeGreaterThanOrEqual(0);
+    expect(result.metrics.perSource[1]?.source).toBe(sourceB);
+    expect(result.metrics.perSource[1]?.discovered).toBe(1);
+    expect(result.metrics.perSource[1]?.durationMs).toBeGreaterThanOrEqual(0);
   });
 });

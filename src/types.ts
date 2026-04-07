@@ -21,6 +21,17 @@ export type CliOutputOptions = {
   verbose?: boolean;
 };
 
+export type DiscoverySourceMetric = {
+  source: string;
+  durationMs: number;
+  discovered: number;
+};
+
+export type DiscoveryMetrics = {
+  durationMs: number;
+  perSource: DiscoverySourceMetric[];
+};
+
 export type ManagedManifest = {
   version: 1;
   managed: Record<string, string>;
@@ -50,6 +61,9 @@ export type SyncResult = {
   updated: string[];
   removed: string[];
   warnings: SyncWarning[];
+  metrics?: {
+    discovery: DiscoveryMetrics;
+  };
 };
 
 export type DoctorIssue =

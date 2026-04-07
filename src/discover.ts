@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { SkillDirEntry } from './types.js';
+import { performance } from 'node:perf_hooks';
+import { DiscoveryMetrics, SkillDirEntry } from './types.js';
 
 const DEFAULT_IGNORED_NAMES = new Set(['.git', 'node_modules']);
 
@@ -78,23 +79,46 @@ export async function discoverSkills(input: {
   sources: string[];
   output: string;
 }): Promise<SkillDirEntry[]> {
+  return (await discoverSkillsWithMetrics(input)).entries;
+}
+
+export async function discoverSkillsWithMetrics(input: {
+  sources: string[];
+  output: string;
+}): Promise<{ entries: SkillDirEntry[]; metrics: DiscoveryMetrics }> {
   const entries: SkillDirEntry[] = [];
+  const perSource: DiscoveryMetrics['perSource'] = [];
+  const startedAt = performance.now();
   const outputPath = await fs
     .realpath(input.output)
     .catch(() => path.resolve(input.output));
   for (const [sourceIndex, source] of input.sources.entries()) {
+    const resolvedSource = path.resolve(source);
+    const sourceStartedAt = performance.now();
+    const entryCountBefore = entries.length;
     await walkDirectory(
-      path.resolve(source),
-      path.resolve(source),
+      resolvedSource,
+      resolvedSource,
       sourceIndex,
       outputPath,
       new Set<string>(),
       entries,
     );
+    perSource.push({
+      source: resolvedSource,
+      durationMs: performance.now() - sourceStartedAt,
+      discovered: entries.length - entryCountBefore,
+    });
   }
-  return entries.sort((left, right) => {
-    if (left.sourceIndex !== right.sourceIndex)
-      return left.sourceIndex - right.sourceIndex;
-    return left.dir.localeCompare(right.dir, 'en');
-  });
+  return {
+    entries: entries.sort((left, right) => {
+      if (left.sourceIndex !== right.sourceIndex)
+        return left.sourceIndex - right.sourceIndex;
+      return left.dir.localeCompare(right.dir, 'en');
+    }),
+    metrics: {
+      durationMs: performance.now() - startedAt,
+      perSource,
+    },
+  };
 }
