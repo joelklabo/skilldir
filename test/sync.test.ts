@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { runSync } from '../src/sync.js';
@@ -7,6 +8,7 @@ import {
   createSkill,
   makeTempDir,
   readSymlinkTarget,
+  writeConfig,
 } from './helpers.js';
 
 const tempDirs: string[] = [];
@@ -131,5 +133,69 @@ describe('runSync', () => {
     expect(await readSymlinkTarget(path.join(output, 'repo-only'))).toBe(
       path.join(projectSkills, 'repo-only'),
     );
+  });
+
+  it('rejects a concurrent sync process while another sync holds the output lock', async () => {
+    const repoRoot = path.resolve(__dirname, '..');
+    const root = await makeTempDir('skilldir-sync-concurrent-');
+    tempDirs.push(root);
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    const configPath = path.join(root, 'config.json');
+
+    await createSkill(source, 'playwright');
+    await writeConfig(configPath, { sources: [source], output });
+
+    const tsxPath = path.join(
+      repoRoot,
+      'node_modules',
+      'tsx',
+      'dist',
+      'cli.mjs',
+    );
+    const scriptPath = path.join(repoRoot, 'test', 'fixtures', 'run-sync.ts');
+
+    const first = spawn(process.execPath, [tsxPath, scriptPath, configPath], {
+      cwd: repoRoot,
+      env: {
+        ...process.env,
+        SKILLDIR_TEST_SYNC_DELAY_MS: '400',
+      },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const second = await new Promise<{ code: number | null; stderr: string }>(
+      (resolve) => {
+        const child = spawn(
+          process.execPath,
+          [tsxPath, scriptPath, configPath],
+          {
+            cwd: repoRoot,
+            env: process.env,
+            stdio: ['ignore', 'pipe', 'pipe'],
+          },
+        );
+        let stderr = '';
+        child.stderr.on('data', (chunk) => {
+          stderr += String(chunk);
+        });
+        child.on('exit', (code) => resolve({ code, stderr }));
+      },
+    );
+
+    expect(second.code).not.toBe(0);
+    expect(second.stderr).toContain('already locked');
+
+    await new Promise<void>((resolve, reject) => {
+      first.on('exit', (code) => {
+        if (code === 0) {
+          resolve();
+          return;
+        }
+        reject(new Error(`first sync exited with code ${String(code)}`));
+      });
+    });
   });
 });

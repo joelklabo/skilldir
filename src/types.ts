@@ -16,6 +16,11 @@ export type SyncConfig = {
   output: string;
 };
 
+export type CliOutputOptions = {
+  quiet?: boolean;
+  verbose?: boolean;
+};
+
 export type ManagedManifest = {
   version: 1;
   managed: Record<string, string>;

@@ -17,7 +17,10 @@
 - one output directory per config is the supported model in `0.x`
 - duplicate skill names within one source are tolerated as warnings in `0.x`
 - watch mode is expected to continue when a source disappears temporarily
+- watch mode runs one startup sync and then uses filesystem events plus periodic interval resyncs as a backstop
 - the output directory owns the sync lock in `0.x`
+- manifest writes use temp-write + rename replacement semantics in `0.x`
+- stronger non-Unix symlink atomicity is intentionally best-effort in `0.x`
 
 ## Core flow
 
@@ -60,6 +63,7 @@ ordered sources
 - it lets `skilldir` distinguish managed symlinks from user-created entries
 - it prevents `sync` from rewriting unrelated symlinks that happen to share a name
 - it gives `doctor` a stable way to identify broken managed symlinks
+- it gives `sync` one private file to rewrite atomically instead of inferring ownership from directory contents alone
 
 ## Why Source Order Beats Priorities In The MVP
 

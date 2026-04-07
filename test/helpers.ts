@@ -30,7 +30,11 @@ export async function writeConfig(
   configPath: string,
   config: { sources: string[]; output: string },
 ) {
-  await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
+  await fs.writeFile(
+    configPath,
+    `${JSON.stringify(config, null, 2)}\n`,
+    'utf8',
+  );
 }
 
 export async function readSymlinkTarget(linkPath: string) {

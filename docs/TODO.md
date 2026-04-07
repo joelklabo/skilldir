@@ -85,15 +85,15 @@ The remaining work is organized in execution order.
 
 - [x] Add an explicit lock for concurrent `sync` runs
 - [x] Decide whether the lock lives in the output directory or app-state directory
-- [ ] Add tests for two concurrent sync processes
-- [ ] Add tests for stale manifest entries
+- [x] Add tests for two concurrent sync processes
+- [x] Add tests for stale manifest entries
 - [x] Add tests for broken managed symlinks before sync
 - [x] Add tests for unmanaged files blocking desired skill names
 - [x] Add tests for unmanaged directories blocking desired skill names
 - [x] Add tests for unmanaged symlinks blocking desired skill names
 - [x] Add tests for managed symlink retargeting after precedence changes
-- [ ] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
-- [ ] Decide whether manifest writes should be atomic temp-write + rename
+- [x] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
+- [x] Decide whether manifest writes should be atomic temp-write + rename
 - [x] Add cleanup behavior for temp files left behind after interrupted syncs
 
 ## Phase 3. Diagnostics and UX
@@ -126,21 +126,21 @@ The remaining work is organized in execution order.
 - [x] Add top-level `--help` examples
 - [x] Add per-command examples
 - [x] Add a top-level `--version`
-- [ ] Add `--quiet`
-- [ ] Add `--verbose`
+- [x] Add `--quiet`
+- [x] Add `--verbose`
 - [x] Decide whether `sync` should print full status or just a compact summary by default
 - [x] Decide whether `doctor` should be quiet on success or print `doctor: ok`
 
 ## Phase 4. Watch Mode Hardening
 
-- [ ] Add tests for startup sync followed by change-driven sync
+- [x] Add tests for startup sync followed by change-driven sync
 - [x] Add tests for repeated burst changes across multiple paths
 - [x] Add tests for source directory deletion and recreation
-- [ ] Add tests for output directory deletion while watch mode is running
-- [ ] Add tests for signal handling and clean shutdown
+- [x] Add tests for output directory deletion while watch mode is running
+- [x] Add tests for signal handling and clean shutdown
 - [x] Add tests for interval-driven periodic resync
-- [ ] Add overflow/backstop behavior if the watcher misses events
-- [ ] Add log messages that distinguish filesystem-triggered syncs from periodic syncs
+- [x] Add overflow/backstop behavior if the watcher misses events
+- [x] Add log messages that distinguish filesystem-triggered syncs from periodic syncs
 - [x] Decide whether watch mode should continue when a source disappears temporarily
 - [x] Decide whether watch mode should emit structured logs in a future `--json` mode
 
@@ -360,11 +360,11 @@ This phase intentionally treats remote support as “another source” rather th
 
 If work starts immediately, the highest-value slice is:
 
-- [ ] Add `status --json` and `doctor --json`
-- [ ] Add CLI integration tests that execute the built binary
-- [ ] Add snapshot tests for text output
-- [ ] Add lock protection for concurrent syncs
-- [ ] Confirm Pages deployment and release workflow permissions
-- [ ] Add README compatibility examples for Codex/OpenCode/Claude Code
+- [x] Add `status --json` and `doctor --json`
+- [x] Add CLI integration tests that execute the built binary
+- [x] Add snapshot tests for text output
+- [x] Add lock protection for concurrent syncs
+- [x] Confirm Pages deployment and release workflow permissions
+- [x] Add README compatibility examples for Codex/OpenCode/Claude Code
 
 That slice tightens the current product before expanding scope.

@@ -33,9 +33,16 @@ export async function writeManifest(
   outputDir: string,
   manifest: ManagedManifest,
 ): Promise<void> {
-  await fs.writeFile(
-    manifestPath(outputDir),
-    `${JSON.stringify(manifest, null, 2)}\n`,
-    'utf8',
-  );
+  const finalPath = manifestPath(outputDir);
+  const tempPath = `${finalPath}.tmp-${process.pid}-${Date.now()}`;
+  try {
+    await fs.writeFile(
+      tempPath,
+      `${JSON.stringify(manifest, null, 2)}\n`,
+      'utf8',
+    );
+    await fs.rename(tempPath, finalPath);
+  } finally {
+    await fs.rm(tempPath, { force: true }).catch(() => {});
+  }
 }

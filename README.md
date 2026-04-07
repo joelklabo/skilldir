@@ -26,11 +26,14 @@ The MVP rule is intentionally small:
 - `sync` prints the full status view by default in `0.x`
 - `doctor` prints `doctor: ok` on success in `0.x`
 - watch mode continues running if a source disappears temporarily
+- watch mode always does a startup sync, then reacts to filesystem changes, then performs periodic interval resyncs as a backstop
 - status output does not show source index numbers or source labels in `0.x`
 - empty sources are not shown in status output
 - shadowed candidates are always shown when present in `0.x`
 - ANSI color is intentionally not used in `0.x`
 - the sync lock lives in the output directory in `0.x`
+- the manifest is rewritten with temp-write + rename semantics in `0.x`
+- stronger non-Unix symlink atomicity is not promised beyond best-effort behavior in `0.x`
 
 This is meant to make tools like Codex, OpenCode, and Claude Code consume one stable skill directory without changing the harness.
 
@@ -48,6 +51,7 @@ The project site remains a simple static page in `0.x`; product messaging is int
 - `skilldir doctor`
 
 Both `status` and `doctor` support `--json`.
+`sync` and `watch` support `--quiet` and `--verbose`.
 
 ## Why Not Wrappers Or FUSE
 
@@ -241,6 +245,8 @@ skilldir --help
 skilldir status --help
 skilldir doctor --help
 skilldir watch --help
+skilldir sync --verbose
+skilldir watch --quiet
 ```
 
 ## Troubleshooting

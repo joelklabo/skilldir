@@ -76,6 +76,43 @@ describe('cli', () => {
     expect(parsed.resolved[0]?.name).toBe('playwright');
   });
 
+  it('suppresses normal sync output with --quiet', async () => {
+    const repoRoot = path.resolve(__dirname, '..');
+    const root = await makeTempDir('skilldir-cli-quiet-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    const configPath = path.join(root, 'config.json');
+
+    await createSkill(source, 'playwright');
+    await writeConfig(configPath, { sources: [source], output });
+
+    const result = runCli(
+      ['sync', '--config', configPath, '--quiet'],
+      repoRoot,
+    );
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe('');
+  });
+
+  it('prints manual trigger diagnostics with sync --verbose', async () => {
+    const repoRoot = path.resolve(__dirname, '..');
+    const root = await makeTempDir('skilldir-cli-verbose-');
+    const source = path.join(root, 'source');
+    const output = path.join(root, 'output');
+    const configPath = path.join(root, 'config.json');
+
+    await createSkill(source, 'playwright');
+    await writeConfig(configPath, { sources: [source], output });
+
+    const result = runCli(
+      ['sync', '--config', configPath, '--verbose'],
+      repoRoot,
+    );
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('sync: trigger=manual');
+    expect(result.stdout).toContain('summary: 1 resolved');
+  });
+
   it('renders doctor --json and exits non-zero when issues exist', async () => {
     const repoRoot = path.resolve(__dirname, '..');
     const root = await makeTempDir('skilldir-cli-doctor-');

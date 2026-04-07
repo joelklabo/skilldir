@@ -4,11 +4,14 @@ import { loadConfig } from './config.js';
 import { renderDoctor, renderDoctorJson, runDoctor } from './doctor.js';
 import { renderStatus, renderStatusJson } from './status.js';
 import { runSync } from './sync.js';
-import { startWatch } from './watch.js';
+import { CliOutputOptions } from './types.js';
+import { runWatchCommand } from './watch-command.js';
 
 type CommonOptions = {
   config: string;
 };
+
+type OutputOptions = CliOutputOptions;
 
 const program = new Command();
 
@@ -30,18 +33,28 @@ Examples:
 program
   .command('sync')
   .requiredOption('--config <path>', 'Path to JSON config file')
+  .option('--quiet', 'Suppress normal sync output')
+  .option('--verbose', 'Print extra sync diagnostics')
   .addHelpText(
     'after',
     `
 Examples:
   skilldir sync --config ./skilldir.json
+  skilldir sync --config ./skilldir.json --quiet
   skilldir sync --config ~/.config/skilldir/config.json
 `,
   )
-  .action(async (options: CommonOptions) => {
+  .action(async (options: CommonOptions & OutputOptions) => {
     const config = await loadConfig(options.config);
+    if (options.verbose) {
+      process.stdout.write(
+        `sync: trigger=manual sources=${config.sources.length} output=${config.output}\n`,
+      );
+    }
     const result = await runSync(config);
-    process.stdout.write(`${renderStatus(result)}\n`);
+    if (!options.quiet) {
+      process.stdout.write(`${renderStatus(result)}\n`);
+    }
   });
 
 program
@@ -91,27 +104,19 @@ Examples:
 program
   .command('watch')
   .requiredOption('--config <path>', 'Path to JSON config file')
+  .option('--quiet', 'Suppress normal status output while watching')
+  .option('--verbose', 'Print trigger diagnostics while watching')
   .addHelpText(
     'after',
     `
 Examples:
   skilldir watch --config ./skilldir.json
+  skilldir watch --config ./skilldir.json --verbose
 `,
   )
-  .action(async (options: CommonOptions) => {
+  .action(async (options: CommonOptions & OutputOptions) => {
     const config = await loadConfig(options.config);
-    const sync = async () => {
-      const result = await runSync(config);
-      process.stdout.write(`${renderStatus(result)}\n`);
-    };
-    await sync();
-    const handle = startWatch(config, { sync });
-    const shutdown = async () => {
-      await handle.close();
-      process.exit(0);
-    };
-    process.on('SIGINT', () => void shutdown());
-    process.on('SIGTERM', () => void shutdown());
+    await runWatchCommand(config, options);
   });
 
 try {

@@ -251,4 +251,45 @@ describe('reconcileOutput', () => {
       playwright: desired,
     });
   });
+
+  it('drops stale manifest entries that no longer exist in the output tree', async () => {
+    const root = await makeTempDir('skilldir-reconcile-stale-manifest-');
+    const output = path.join(root, 'output');
+    const source = path.join(root, 'source');
+    const desired = await createSkill(source, 'playwright');
+
+    await fs.mkdir(output, { recursive: true });
+    await fs.writeFile(
+      path.join(output, '.skilldir-manifest.json'),
+      JSON.stringify(
+        {
+          version: 1,
+          managed: {
+            stale: path.join(source, 'stale'),
+          },
+        },
+        null,
+        2,
+      ),
+      'utf8',
+    );
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: desired,
+          skillFile: path.join(desired, 'SKILL.md'),
+          source,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.created).toEqual(['playwright']);
+    expect((await readManifest(output)).managed).toEqual({
+      playwright: desired,
+    });
+  });
 });

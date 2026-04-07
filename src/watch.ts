@@ -1,11 +1,15 @@
 import chokidar, { FSWatcher } from 'chokidar';
 import { SyncConfig } from './types.js';
 
+export type WatchTrigger = 'filesystem' | 'interval' | 'startup';
+
 export type WatchDependencies = {
-  sync: () => Promise<void>;
+  sync: (trigger: WatchTrigger) => Promise<void>;
   createWatcher?: (paths: string[]) => FSWatcher;
   setTimeoutFn?: typeof setTimeout;
   setIntervalFn?: typeof setInterval;
+  debounceMs?: number;
+  intervalMs?: number;
 };
 
 export function startWatch(config: SyncConfig, deps: WatchDependencies) {
@@ -17,13 +21,15 @@ export function startWatch(config: SyncConfig, deps: WatchDependencies) {
       }));
   const setTimeoutFn = deps.setTimeoutFn ?? setTimeout;
   const setIntervalFn = deps.setIntervalFn ?? setInterval;
+  const debounceMs = deps.debounceMs ?? 200;
+  const intervalMs = deps.intervalMs ?? 10 * 60 * 1000;
   let timer: ReturnType<typeof setTimeout> | null = null;
   const schedule = () => {
     if (timer) clearTimeout(timer);
     timer = setTimeoutFn(() => {
       timer = null;
-      void deps.sync();
-    }, 200);
+      void deps.sync('filesystem');
+    }, debounceMs);
   };
   const watcher = createWatcher(config.sources);
   watcher.on('add', schedule);
@@ -31,12 +37,9 @@ export function startWatch(config: SyncConfig, deps: WatchDependencies) {
   watcher.on('change', schedule);
   watcher.on('unlink', schedule);
   watcher.on('unlinkDir', schedule);
-  const interval = setIntervalFn(
-    () => {
-      void deps.sync();
-    },
-    10 * 60 * 1000,
-  );
+  const interval = setIntervalFn(() => {
+    void deps.sync('interval');
+  }, intervalMs);
   return {
     async close() {
       if (timer) clearTimeout(timer);

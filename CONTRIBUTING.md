@@ -13,6 +13,7 @@ pnpm check
 - Add tests before or alongside behavior changes.
 - Prefer simple full-rescan logic over incremental state until profiling proves otherwise.
 - Treat the output directory as managed state.
+- Keep watch-mode logging intentionally small: default output is status, verbose output is trigger diagnostics.
 
 ## Release Flow
 
