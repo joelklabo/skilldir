@@ -30,7 +30,11 @@ function makeResult(): SyncResult {
 
 describe('status output', () => {
   it('renders human output', () => {
-    expect(renderStatus(makeResult())).toContain('playwright -> /a/playwright');
+    expect(renderStatus(makeResult())).toMatchInlineSnapshot(`
+      "playwright -> /a/playwright
+        shadowed:
+        - /b/playwright"
+    `);
   });
 
   it('renders JSON output', () => {
@@ -47,5 +51,30 @@ describe('status output', () => {
       shadowed: ['/b/playwright'],
     });
     expect(parsed.created).toEqual([]);
+  });
+
+  it('renders warning blocks deterministically', () => {
+    const text = renderStatus({
+      ...makeResult(),
+      warnings: [
+        { code: 'source-missing', source: '/missing/source' },
+        {
+          code: 'conflicting-unmanaged-entry',
+          skill: 'playwright',
+          path: '/output/playwright',
+          expectedTarget: '/a/playwright',
+        },
+      ],
+    });
+
+    expect(text).toMatchInlineSnapshot(`
+      "playwright -> /a/playwright
+        shadowed:
+        - /b/playwright
+
+      warnings:
+      - missing source: /missing/source
+      - unmanaged conflict for playwright: /output/playwright"
+    `);
   });
 });

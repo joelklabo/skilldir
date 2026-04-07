@@ -95,12 +95,40 @@ Machine-readable `status --json`:
 }
 ```
 
+Human-readable `doctor`:
+
+```text
+shadowed skill: playwright winner=/home/honk/code/project/.agents/skills/playwright shadowed=/home/honk/.codex/skills/playwright
+unmanaged output entry: /home/honk/.agents/skills/manual
+```
+
+Machine-readable `doctor --json`:
+
+```json
+{
+  "issues": [
+    {
+      "code": "shadowed-skill",
+      "skill": "playwright",
+      "winner": "/home/honk/code/project/.agents/skills/playwright",
+      "shadowed": "/home/honk/.codex/skills/playwright"
+    }
+  ],
+  "count": 1
+}
+```
+
 ## Local Development
 
 ```bash
 pnpm install
 pnpm check
 ```
+
+## Troubleshooting
+
+- If `sync` reports that the output is already locked, another `sync` or `watch` process is still holding the output lock file.
+- If `doctor` reports unmanaged output entries, move or remove those entries from the managed output directory rather than expecting `skilldir` to adopt them automatically.
 
 ## Docs
 

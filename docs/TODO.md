@@ -27,7 +27,7 @@ The remaining work is organized in execution order.
 - [x] Implement `watch`
 - [x] Add unit and integration coverage for current MVP behavior
 - [x] Verify local `pnpm check` passes
-- [ ] Confirm GitHub Pages is enabled and the deployed site matches `site/index.html`
+- [x] Confirm GitHub Pages is enabled and the deployed site matches `site/index.html`
 - [x] Confirm the release workflow has the required repository permissions and tokens
 
 ## Phase 1. Define the `0.x` Product Contract
@@ -48,12 +48,12 @@ The remaining work is organized in execution order.
 
 - [ ] Add a config version field or explicitly document versionless config
 - [ ] Support `--config` consistently on every command
-- [ ] Add better config-file-not-found errors
-- [ ] Add better config-parse errors with filename and line/column when possible
-- [ ] Expand `~` in configured paths
-- [ ] Normalize all configured paths to absolute paths
-- [ ] Resolve relative paths from the config file directory, not the shell cwd
-- [ ] Add explicit tests for path normalization
+- [x] Add better config-file-not-found errors
+- [x] Add better config-parse errors with filename and line/column when possible
+- [x] Expand `~` in configured paths
+- [x] Normalize all configured paths to absolute paths
+- [x] Resolve relative paths from the config file directory, not the shell cwd
+- [x] Add explicit tests for path normalization
 - [ ] Decide whether env var interpolation is supported
 - [ ] If env var interpolation is supported, define exact syntax and escaping behavior
 - [ ] Add config fixtures covering valid and invalid cases
@@ -87,10 +87,10 @@ The remaining work is organized in execution order.
 - [ ] Decide whether the lock lives in the output directory or app-state directory
 - [ ] Add tests for two concurrent sync processes
 - [ ] Add tests for stale manifest entries
-- [ ] Add tests for broken managed symlinks before sync
+- [x] Add tests for broken managed symlinks before sync
 - [ ] Add tests for unmanaged files blocking desired skill names
 - [ ] Add tests for unmanaged directories blocking desired skill names
-- [ ] Add tests for unmanaged symlinks blocking desired skill names
+- [x] Add tests for unmanaged symlinks blocking desired skill names
 - [ ] Add tests for managed symlink retargeting after precedence changes
 - [ ] Decide whether temp symlink creation needs stronger atomic semantics on non-Unix platforms
 - [ ] Decide whether manifest writes should be atomic temp-write + rename
@@ -103,7 +103,7 @@ The remaining work is organized in execution order.
 - [ ] Add a compact summary line with counts
 - [x] Add `status --json`
 - [ ] Define a stable JSON schema for `status --json`
-- [ ] Add snapshot tests for human-readable status output
+- [x] Add snapshot tests for human-readable status output
 - [ ] Add snapshot tests for JSON status output
 - [ ] Decide whether empty sources are shown in `status`
 - [ ] Decide whether shadowed candidates should be hidden behind a flag in compact mode
@@ -153,8 +153,8 @@ The remaining work is organized in execution order.
 - [x] Add CLI tests for `doctor`
 - [x] Add CLI tests for error cases like missing config and invalid config
 - [ ] Add integration tests for nested source/output combinations
-- [ ] Add integration tests for broken symlinks in the output tree
-- [ ] Add integration tests for unmanaged output conflicts
+- [x] Add integration tests for broken symlinks in the output tree
+- [x] Add integration tests for unmanaged output conflicts
 - [ ] Add integration tests for precedence changes between sync runs
 - [ ] Add fixture directories that model realistic Codex/OpenCode/Claude skill trees
 - [ ] Decide whether to add large-tree performance tests in CI or keep them local-only
@@ -167,8 +167,8 @@ The remaining work is organized in execution order.
 - [ ] Add installation instructions for global CLI usage
 - [ ] Add a short “why not wrappers / why not FUSE” rationale
 - [x] Add explicit compatibility notes for Codex, OpenCode, and Claude Code
-- [ ] Add sample `status` and `doctor` output
-- [ ] Add troubleshooting section for unmanaged output entries
+- [x] Add sample `status` and `doctor` output
+- [x] Add troubleshooting section for unmanaged output entries
 - [ ] Add troubleshooting section for permissions and broken symlinks
 - [ ] Add badges for CI and release status
 
@@ -191,8 +191,8 @@ The remaining work is organized in execution order.
 
 ### CI
 
-- [ ] Confirm the CI workflow runs on PRs and on `main`
-- [ ] Confirm CI uses `pnpm install --frozen-lockfile`
+- [x] Confirm the CI workflow runs on PRs and on `main`
+- [x] Confirm CI uses `pnpm install --frozen-lockfile`
 - [ ] Decide whether CI should also run `format:check`
 - [ ] Decide whether coverage should be uploaded somewhere
 - [ ] Add artifact upload for built output if that becomes useful
@@ -201,6 +201,7 @@ The remaining work is organized in execution order.
 ### Release workflow
 
 - [ ] Confirm the Changesets workflow opens version PRs correctly
+  - Current state: the workflow pushes `changeset-release/main`, but GitHub Actions is not currently permitted by repo settings to create the version PR.
 - [ ] Decide whether release PRs should be auto-merged or manually reviewed
 - [ ] Decide whether npm publishing is part of the next milestone or deferred
 - [ ] If npm publishing is enabled, add `NPM_TOKEN` and document required setup
@@ -211,7 +212,7 @@ The remaining work is organized in execution order.
 ### Pages
 
 - [ ] Confirm Pages is enabled in repo settings
-- [ ] Confirm the Pages workflow deploys on `main`
+- [x] Confirm the Pages workflow deploys on `main`
 - [ ] Confirm the custom site path matches the repo name
 - [ ] Add a simple diagram or animation only if it improves understanding
 - [ ] Keep the site static until product messaging stabilizes

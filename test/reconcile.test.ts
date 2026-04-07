@@ -75,4 +75,79 @@ describe('reconcileOutput', () => {
     expect(result.removed).toEqual(['playwright']);
     await expect(fs.lstat(path.join(output, 'playwright'))).rejects.toThrow();
   });
+
+  it('retargets a broken managed symlink when the desired winner changes', async () => {
+    const root = await makeTempDir('skilldir-reconcile-broken-');
+    const output = path.join(root, 'output');
+    const sourceA = path.join(root, 'a');
+    const sourceB = path.join(root, 'b');
+    const current = await createSkill(sourceA, 'playwright');
+    const next = await createSkill(sourceB, 'playwright');
+
+    await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: current,
+          skillFile: path.join(current, 'SKILL.md'),
+          source: sourceA,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    await fs.rm(current, { recursive: true, force: true });
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: next,
+          skillFile: path.join(next, 'SKILL.md'),
+          source: sourceB,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.updated).toEqual(['playwright']);
+    expect(await fs.readlink(path.join(output, 'playwright'))).toBe(next);
+  });
+
+  it('warns when an unmanaged symlink blocks the desired skill name', async () => {
+    const root = await makeTempDir('skilldir-reconcile-unmanaged-link-');
+    const output = path.join(root, 'output');
+    const source = path.join(root, 'source');
+    const other = path.join(root, 'other');
+    const desired = await createSkill(source, 'playwright');
+    const unmanaged = await createSkill(other, 'playwright-manual');
+
+    await fs.mkdir(output, { recursive: true });
+    await fs.symlink(unmanaged, path.join(output, 'playwright'));
+
+    const result = await reconcileOutput({
+      output,
+      resolved: resolveSkills([
+        {
+          name: 'playwright',
+          dir: desired,
+          skillFile: path.join(desired, 'SKILL.md'),
+          source,
+          sourceIndex: 0,
+        },
+      ]),
+    });
+
+    expect(result.warnings).toEqual([
+      {
+        code: 'conflicting-unmanaged-entry',
+        skill: 'playwright',
+        path: path.join(output, 'playwright'),
+        expectedTarget: desired,
+      },
+    ]);
+    expect(await fs.readlink(path.join(output, 'playwright'))).toBe(unmanaged);
+  });
 });

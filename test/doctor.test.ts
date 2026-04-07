@@ -43,4 +43,21 @@ describe('doctor', () => {
     expect(parsed.count).toBe(parsed.issues.length);
     expect(parsed.issues[0]?.code).toBe('unmanaged-output-entry');
   });
+
+  it('renders human output deterministically', async () => {
+    const root = await makeTempDir('skilldir-doctor-text-');
+    const sourceA = path.join(root, 'a');
+    const sourceB = path.join(root, 'b');
+    const output = path.join(root, 'out');
+    await createSkill(sourceA, 'playwright');
+    await createSkill(sourceB, 'playwright');
+    await fs.mkdir(path.join(output, 'manual'), { recursive: true });
+
+    const issues = await runDoctor(
+      { sources: [sourceA, sourceB], output },
+      await runSync({ sources: [sourceA, sourceB], output }),
+    );
+
+    expect(renderDoctorJson(issues)).toContain('"count": 2');
+  });
 });
